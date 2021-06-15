@@ -93,6 +93,14 @@ define Device/aruba_ap-105
 endef
 TARGET_DEVICES += aruba_ap-105
 
+define Device/atheros_ar9331
+  $(Device/tplink-8mlzma)
+  ATH_SOC := ar9331
+  DEVICE_TITLE := Atheros AR9331
+  IMAGES := sysupgrade.bin
+endef
+TARGET_DEVICES += atheros_ar9331
+
 define Device/avm_fritz300e
   ATH_SOC := ar7242
   DEVICE_TITLE := AVM FRITZ!WLAN Repeater 300E

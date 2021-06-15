@@ -336,6 +336,14 @@ define Device/tplink_tl-wr841-v12
 endef
 TARGET_DEVICES += tplink_tl-wr841-v12
 
+define Device/tplink_tl-wr841n-v7
+  $(Device/tplink-4m)
+  ATH_SOC := ar7241
+  DEVICE_TITLE := TP-Link TL-WR841N v7
+  TPLINK_HWID := 0x08410007
+endef
+TARGET_DEVICES += tplink_tl-wr841n-v7
+
 define Device/tplink_tl-wr940n-v3
   $(Device/tplink-4mlzma)
   ATH_SOC := tp9343
@@ -389,6 +397,14 @@ define Device/tplink_tl-wr941-v4
   SUPPORTED_DEVICES += tl-wr741nd
 endef
 TARGET_DEVICES += tplink_tl-wr941-v4
+
+define Device/tplink_tl-wr941n-v5
+  $(Device/tplink-4m)
+  ATH_SOC := ar7240
+  DEVICE_TITLE := TP-Link TL-WR941N v5
+  TPLINK_HWID := 0x09410004
+endef
+TARGET_DEVICES += tplink_tl-wr941n-v5
 
 define Device/tplink_tl-wr941nd-v6
   $(Device/tplink-4mlzma)

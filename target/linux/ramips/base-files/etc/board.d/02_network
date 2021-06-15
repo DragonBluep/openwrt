@@ -170,6 +170,7 @@ ramips_setup_interfaces()
 		ucidef_set_interface_lan "eth0"
 		;;
 	alfa-network,quad-e4g|\
+	k2|\
 	netgear,r6120|\
 	r6220|\
 	netgear,r6350|\
@@ -346,6 +347,10 @@ ramips_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"1:lan" "2:lan" "3:lan" "4:wan" "6@eth0"
 		;;
+	hw-l1w)
+		ucidef_add_switch "switch0" \
+			"1:lan:2" "2:lan:1" "0:wan" "6@eth0"
+		;;
 	iodata,wn-ac1167gr|\
 	iodata,wn-ac733gr3)
 		ucidef_add_switch "switch1" \
@@ -423,6 +428,7 @@ ramips_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"4:lan" "6@eth0"
 		;;
+	mpr-i6|\
 	vonets,var11n-300|\
 	wt1520-4M|\
 	wt1520-8M)
@@ -518,6 +524,8 @@ ramips_setup_macs()
 	alfa-network,r36m-e4g|\
 	carambola|\
 	freestation5|\
+	k2|\
+	mpr-i6|\
 	w502u|\
 	wnce2001)
 		wan_mac=$(mtd_get_mac_binary factory 46)
@@ -589,6 +597,9 @@ ramips_setup_macs()
 		lan_mac=`mtd_get_mac_ascii bdinfo "Vfac_mac "`
 		[ -n "$lan_mac" ] || lan_mac=$(cat /sys/class/net/eth0/address)
 		wan_mac=$(macaddr_add "$lan_mac" 1)
+		;;
+	hw-l1w)
+		wan_mac=$(mtd_get_mac_binary factory 0xffee)
 		;;
 	iodata,wn-ac1167gr|\
 	iodata,wn-ac733gr3)

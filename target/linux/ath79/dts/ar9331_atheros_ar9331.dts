@@ -1,0 +1,122 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+/dts-v1/;
+
+#include "ar9331.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "atheros,ar9331", "qca,ar9331";
+	model = "Atheros AR9331";
+
+	aliases {
+		led-boot = &led_system;
+		led-failsafe = &led_system;
+		led-running = &led_system;
+		led-upgrade = &led_system;
+	};
+
+	keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+			linux,code = <KEY_RESTART>;
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&switch_led_disable_pins>;
+
+		led_system: system {
+			label = "atheros:green:system";
+			gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
+		};
+
+		lan1 {
+			label = "atheros:green:lan1";
+			gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
+		};
+
+		lan2 {
+			label = "atheros:green:lan2";
+			gpios = <&gpio 14 GPIO_ACTIVE_HIGH>;
+		};
+
+		lan3 {
+			label = "atheros:green:lan3";
+			gpios = <&gpio 15 GPIO_ACTIVE_HIGH>;
+		};
+
+		lan4 {
+			label = "atheros:green:lan4";
+			gpios = <&gpio 16 GPIO_ACTIVE_HIGH>;
+		};
+
+		wan {
+			label = "atheros:green:wan";
+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
+		};
+	};
+};
+
+&spi {
+	status = "okay";
+	num-cs = <1>;
+
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <50000000>;
+		m25p,fast-read;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0 {
+				label = "u-boot";
+				reg = <0x0 0x20000>;
+				read-only;
+			};
+
+			partition@20000 {
+				compatible = "tplink,firmware";
+				label = "firmware";
+				reg = <0x20000 0x7d0000>;
+			};
+
+			art: partition@7f0000 {
+				label = "art";
+				reg = <0x7f0000 0x10000>;
+				read-only;
+			};
+		};
+	};
+};
+
+&eth0 {
+	status = "okay";
+
+	mtd-mac-address = <&art 0x8>;
+};
+
+&eth1 {
+	status = "okay";
+
+	mtd-mac-address = <&art 0x0>;
+};
+
+&wmac {
+	status = "okay";
+
+	mtd-cal-data = <&art 0x1000>;
+	mtd-mac-address = <&art 0x0>;
+};

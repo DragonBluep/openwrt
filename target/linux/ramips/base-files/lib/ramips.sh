@@ -241,6 +241,9 @@ ramips_board_detect() {
 	*"HT-TM02")
 		name="ht-tm02"
 		;;
+	*"HW-L1W")
+		name="hw-l1w"
+		;;
 	*"HW550-3G")
 		name="hw550-3g"
 		;;
@@ -255,6 +258,9 @@ ramips_board_detect() {
 		;;
 	*"JHR-N926R")
 		name="jhr-n926r"
+		;;
+	*"K2")
+		name="k2"
 		;;
 	*"K2P")
 		name="k2p"
@@ -306,6 +312,9 @@ ramips_board_detect() {
 		;;
 	*"MPR-A2")
 		name="mpr-a2"
+		;;
+	*"MPR-I6")
+		name="mpr-i6"
 		;;
 	*"MR-102N")
 		name="mr-102n"

@@ -508,6 +508,14 @@ define Device/mpr-a2
 endef
 TARGET_DEVICES += mpr-a2
 
+define Device/mpr-i6
+  DTS := MPRI6
+  IMAGE_SIZE := 3904k
+  DEVICE_TITLE := Ralink MPR-I6
+  DEVICE_PACKAGES := kmod-usb-ohci kmod-usb2
+endef
+TARGET_DEVICES += mpr-i6
+
 define Device/mr-102n
   DTS := MR-102N
   DEVICE_TITLE := AXIMCom MR-102N

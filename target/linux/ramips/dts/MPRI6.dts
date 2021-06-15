@@ -1,0 +1,99 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+/dts-v1/;
+
+#include "rt5350.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "ralink,mpr-i6", "ralink,rt5350-soc";
+	model = "Ralink MPR-I6";
+
+	aliases {
+		led-boot = &led_system;
+		led-failsafe = &led_system;
+		led-running = &led_system;
+		led-upgrade = &led_system;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+ 
+		led_system: system {
+			label = "mpr-i6:red:system";
+			gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
+		};
+
+		wlan {
+			label = "mpr-i6:blue:wlan";
+			gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phy0tpt";
+		};
+	};
+
+	keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			gpios = <&gpio0 10 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_RESTART>;
+		};
+	};
+};
+
+&spi0 {
+	status = "okay";
+
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <20000000>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0 {
+				label = "u-boot";
+				reg = <0x0 0x20000>;
+				read-only;
+			};
+
+			factory: partition@20000 {
+				label = "factory";
+				reg = <0x20000 0x10000>;
+				read-only;
+			};
+
+			partition@30000 {
+				compatible = "denx,uimage";
+				label = "firmware";
+				reg = <0x30000 0x3d0000>;
+			};
+		};
+	};
+};
+
+&state_default {
+	gpio {
+		ralink,group = "jtag", "uartf";
+		ralink,function = "gpio";
+	};
+};
+
+&ethernet {
+	mtd-mac-address = <&factory 0x28>;
+};
+
+&esw {
+	mediatek,portmap = <0x2f>;
+	mediatek,portdisable = <0x2f>;
+};
+
+&wmac {
+	ralink,mtd-eeprom = <&factory 0x0>;
+};

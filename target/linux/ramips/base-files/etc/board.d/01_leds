@@ -217,6 +217,9 @@ iodata,wn-ac733gr3)
 	ucidef_set_led_wlan "wlan5g" "WLAN5G" "$boardname:green:wlan5g" "phy0radio"
 	ucidef_set_led_wlan "wlan2g" "WLAN2G" "$boardname:green:wlan2g" "phy1radio"
 	;;
+k2)
+	ucidef_set_led_netdev "internet" "internet" "$boardname:blue:status" "eth0.2" "tx rx"
+	;;
 kimax,u35wf)
 	set_wifi_led "$boardname:blue:wifi"
 	ucidef_set_led_netdev "eth" "ETH" "$boardname:green:eth" "eth0"

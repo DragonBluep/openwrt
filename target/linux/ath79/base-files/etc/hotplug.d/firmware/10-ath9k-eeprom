@@ -145,7 +145,8 @@ case "$FIRMWARE" in
 	tplink,tl-wa830re-v1|\
 	tplink,tl-wa901nd-v1|\
 	tplink,tl-wr841-v5|\
-	tplink,tl-wr941-v4)
+	tplink,tl-wr941-v4|\
+	tplink,tl-wr941n-v5)
 		ath9k_eeprom_extract "art" 4096 3768
 		;;
 	buffalo,wzr-hp-g450h|\
@@ -178,6 +179,7 @@ case "$FIRMWARE" in
 	tplink,tl-wr741-v1|\
 	tplink,tl-wr743nd-v1|\
 	tplink,tl-wr841-v7|\
+	tplink,tl-wr841n-v7|\
 	tplink,tl-wr842n-v1|\
 	ubnt,airrouter|\
 	ubnt,bullet-m|\

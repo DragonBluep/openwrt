@@ -374,6 +374,14 @@ define Device/head-weblink_hdrm200
 endef
 TARGET_DEVICES += head-weblink_hdrm200
 
+define Device/hw-l1w
+  DTS := HW-L1W
+  IMAGE_SIZE := 16064k
+  DEVICE_TITLE := Haier HW-L1W
+  DEVICE_PACKAGES := kmod-mt76x0e kmod-sdhci-mt7620 kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport
+endef
+TARGET_DEVICES += hw-l1w
+
 define Device/iodata_wn-ac1167gr
   DTS := WN-AC1167GR
   DEVICE_TITLE := I-O DATA WN-AC1167GR
@@ -397,6 +405,14 @@ define Device/iodata_wn-ac733gr3
   DEVICE_PACKAGES := kmod-mt76x0e kmod-switch-rtl8367b
 endef
 TARGET_DEVICES += iodata_wn-ac733gr3
+
+define Device/k2
+  DTS := K2
+  IMAGE_SIZE := 7552k
+  DEVICE_TITLE := Phicomm K2
+  DEVICE_PACKAGES := kmod-mt76x2 -kmod-rt2800-soc
+endef
+TARGET_DEVICES += k2
 
 define Device/kimax_u35wf
   DTS := U35WF

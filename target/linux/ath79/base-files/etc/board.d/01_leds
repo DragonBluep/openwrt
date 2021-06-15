@@ -12,6 +12,13 @@ case "$board" in
 	ucidef_set_led_netdev "lan" "LAN" "$boardname:orange:eth0" "eth0"
 	ucidef_set_led_switch "wan" "WAN" "$boardname:orange:eth1" "switch0" "0x04"
 	;;
+atheros,ar9331)
+	ucidef_set_led_netdev "wan" "WAN" "atheros:green:wan" "eth1"
+	ucidef_set_led_switch "lan1" "LAN1" "atheros:green:lan1" "switch0" "0x02"
+	ucidef_set_led_switch "lan2" "LAN2" "atheros:green:lan2" "switch0" "0x04"
+	ucidef_set_led_switch "lan3" "LAN3" "atheros:green:lan3" "switch0" "0x08"
+	ucidef_set_led_switch "lan4" "LAN4" "atheros:green:lan4" "switch0" "0x10"
+	;;
 avm,fritz300e)
 	ucidef_set_led_netdev "lan" "LAN" "$boardname:green:lan" "eth0"
 	ucidef_set_rssimon "wlan0" "200000" "1"
@@ -209,7 +216,8 @@ tplink,tl-wr740n-v3|\
 tplink,tl-wr741-v1|\
 tplink,tl-wr743nd-v1|\
 tplink,tl-wr841-v5|\
-tplink,tl-wr941-v4)
+tplink,tl-wr941-v4|\
+tplink,tl-wr941n-v5)
 	ucidef_set_led_netdev "wan" "WAN" "tp-link:green:wan" "eth0"
 	ucidef_set_led_switch "lan1" "LAN1" "tp-link:green:lan1" "switch0" "0x02"
 	ucidef_set_led_switch "lan2" "LAN2" "tp-link:green:lan2" "switch0" "0x04"
