@@ -115,6 +115,17 @@ ath79_setup_interfaces()
 	ubnt,unifi-ap-outdoor-plus)
 		ucidef_set_interface_lan "eth0 eth1"
 		;;
+	atheros,ar9331|\
+	comfast,cf-e560ac|\
+	fast,fw150r-v11|\
+	qca,ap143-8m|\
+	qca,ap143-16m|\
+	tplink,tl-wr841hp-v3|\
+	tplink,tl-wr886n-v5)
+		ucidef_set_interface_wan "eth1"
+		ucidef_add_switch "switch0" \
+			"0@eth0" "1:lan" "2:lan" "3:lan" "4:lan"
+		;;
 	avm,fritz4020|\
 	pcs,cr3000|\
 	tplink,archer-c58-v1|\
@@ -146,6 +157,7 @@ ath79_setup_interfaces()
 		;;
 	buffalo,wzr-600dhp|\
 	buffalo,wzr-hp-ag300h|\
+	lg,napl-5000|\
 	tplink,archer-c25-v1|\
 	tplink,archer-c60-v1|\
 	tplink,archer-c60-v2|\
@@ -194,14 +206,6 @@ ath79_setup_interfaces()
 	comfast,cf-e375ac)
 		ucidef_add_switch "switch0" \
 			"0@eth0" "1:wan" "2:lan"
-		;;
-	comfast,cf-e560ac|\
-	qca,ap143-8m|\
-	qca,ap143-16m|\
-	tplink,tl-wr841hp-v3)
-		ucidef_set_interface_wan "eth1"
-		ucidef_add_switch "switch0" \
-			"0@eth0" "1:lan" "2:lan" "3:lan" "4:lan"
 		;;
 	comfast,cf-wr650ac-v1|\
 	comfast,cf-wr650ac-v2|\

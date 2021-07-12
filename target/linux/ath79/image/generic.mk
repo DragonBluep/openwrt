@@ -330,6 +330,15 @@ define Device/aruba_ap-105
 endef
 TARGET_DEVICES += aruba_ap-105
 
+define Device/atheros_ar9331
+  $(Device/tplink-8mlzma)
+  SOC := ar9331
+  DEVICE_VENDOR := Atheros
+  DEVICE_MODEL := AR9331
+  IMAGES := sysupgrade.bin
+endef
+TARGET_DEVICES += atheros_ar9331
+
 define Device/avm
   DEVICE_VENDOR := AVM
   KERNEL := kernel-bin | append-dtb | lzma | eva-image
@@ -1157,6 +1166,16 @@ define Device/etactica_eg200
 endef
 TARGET_DEVICES += etactica_eg200
 
+define Device/fast_fw150r-v11
+  $(Device/tplink-8mlzma)
+  SOC := ar9331
+  DEVICE_VENDOR := FAST
+  DEVICE_MODEL := FW150R
+  DEVICE_VARIANT := v11
+  IMAGES := sysupgrade.bin
+endef
+TARGET_DEVICES += fast_fw150r-v11
+
 define Device/glinet_6408
   $(Device/tplink-8mlzma)
   SOC := ar9331
@@ -1368,6 +1387,15 @@ define Device/jjplus_ja76pf2
   SUPPORTED_DEVICES += ja76pf2
 endef
 TARGET_DEVICES += jjplus_ja76pf2
+
+define Device/lg_napl-5000
+  $(Device/tplink-8mlzma)
+  SOC := ar7241
+  DEVICE_VENDOR := LG
+  DEVICE_MODEL := NAPL-5000
+  IMAGES := sysupgrade.bin
+endef
+TARGET_DEVICES += lg_napl-5000
 
 define Device/librerouter_librerouter-v1
   SOC := qca9558

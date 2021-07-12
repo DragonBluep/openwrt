@@ -796,6 +796,15 @@ define Device/tplink_tl-wr842n-v3
 endef
 TARGET_DEVICES += tplink_tl-wr842n-v3
 
+define Device/tplink_tl-wr886n-v5
+  $(Device/tplink-8mlzma)
+  SOC := tp9343
+  DEVICE_MODEL := TL-WR886N
+  DEVICE_VARIANT := v5
+  IMAGES := sysupgrade.bin
+endef
+TARGET_DEVICES += tplink_tl-wr886n-v5
+
 define Device/tplink_tl-wr902ac-v1
   $(Device/tplink-safeloader)
   SOC := qca9531

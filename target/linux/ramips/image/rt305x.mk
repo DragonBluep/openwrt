@@ -939,6 +939,15 @@ define Device/prolink_pwh2004
 endef
 TARGET_DEVICES += prolink_pwh2004
 
+define Device/ralink_mpr-i6
+  SOC := rt5350
+  IMAGE_SIZE := 8000k
+  DEVICE_VENDOR := Ralink
+  DEVICE_MODEL := MPR-I6
+  DEVICE_PACKAGES := kmod-usb-ohci kmod-usb2
+endef
+TARGET_DEVICES += ralink_mpr-i6
+
 define Device/ralink_v22rw-2x2
   SOC := rt3052
   BLOCKSIZE := 64k

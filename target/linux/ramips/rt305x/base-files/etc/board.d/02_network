@@ -124,6 +124,7 @@ ramips_setup_interfaces()
 			"0:lan" "1:wan" "6@eth0"
 		;;
 	aximcom,mr-102n|\
+	ralink,mpr-i6|\
 	trendnet,tew-638apb-v2)
 		ucidef_add_switch "switch0" \
 			"4:lan" "6@eth0"
@@ -190,7 +191,8 @@ ramips_setup_macs()
 	8devices,carambola|\
 	alfa-network,w502u|\
 	arcwireless,freestation5|\
-	netgear,wnce2001)
+	netgear,wnce2001|\
+	ralink,mpr-i6)
 		wan_mac=$(mtd_get_mac_binary factory 0x2e)
 		;;
 	accton,wr6202|\
