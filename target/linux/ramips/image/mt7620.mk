@@ -552,6 +552,18 @@ define Device/glinet_gl-mt750
 endef
 TARGET_DEVICES += glinet_gl-mt750
 
+define Device/haier_hw-l1w
+  SOC := mt7620a
+  IMAGE_SIZE := 16064k
+  DEVICE_VENDOR := Haier
+  DEVICE_MODEL := HW-L1W
+  DEVICE_PACKAGES := kmod-mt76x0e kmod-usb-ohci \
+	kmod-usb2 kmod-usb-ledtrig-usbport uboot-envtools
+  IMAGE/sysupgrade.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
+	append-rootfs | pad-rootfs | check-size | append-metadata
+endef
+TARGET_DEVICES += haier_hw-l1w
+
 define Device/head-weblink_hdrm200
   SOC := mt7620a
   IMAGE_SIZE := 16064k
