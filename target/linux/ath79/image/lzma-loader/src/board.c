@@ -198,21 +198,24 @@ static inline void huawei_ap_init(void)
 
 	printf("Huawei AP\n");
 
+	reg = READREG(gpiobase + AR934X_GPIO_REG_FUNC);
+	WRITEREG(gpiobase + AR934X_GPIO_REG_FUNC,
+		 reg | AR934X_GPIO_FUNC_CLK_OBS4_EN);
+
 	reg = READREG(gpiobase + AR71XX_GPIO_REG_OE);
 	WRITEREG(gpiobase + AR71XX_GPIO_REG_OE,
 			reg & ~(1 << watchdog_gpio));
 
-	/* Set GPIO15 MUX to output CLK_OBS5 (= CPU_CLK/4)
-	 * or CLK_OBS4 (= AHB_CLK/2) to keep the watchdog happy
-	 * until wdt-gpio takes over
+	/* Set watchdog GPIO MUX to output CLK_OBS4 (= AHB_CLK/2) to
+	 * keep the watchdog happy until wdt-gpio takes over.
 	 */
 	reg = READREG(gpiobase + AR934X_GPIO_REG_OUT_FUNC3);
 #if defined(CONFIG_BOARD_HUAWEI_AP5030DN)
 	WRITEREG(gpiobase + AR934X_GPIO_REG_OUT_FUNC3,
-			reg | (QCA955X_GPIO_OUTSEL_CLK_OBS5 << 24));
+		 reg | (QCA955X_GPIO_OUTSEL_CLK_OBS4 << 24));
 #elif defined(CONFIG_BOARD_HUAWEI_AP6010DN)
 	WRITEREG(gpiobase + AR934X_GPIO_REG_OUT_FUNC3,
-			reg | (AR934X_GPIO_OUTSEL_CLK_OBS4 << 24));
+		 reg | (AR934X_GPIO_OUTSEL_CLK_OBS4 << 24));
 #endif
 }
 #else
