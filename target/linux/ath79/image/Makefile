@@ -107,6 +107,12 @@ define Device/seama
   SEAMA_SIGNATURE :=
 endef
 
+define Device/uimage-lzma-loader
+  LOADER_TYPE := bin
+  KERNEL := kernel-bin | append-dtb | lzma | loader-kernel | uImage none
+  KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | loader-kernel | uImage none
+endef
+
 include $(SUBTARGET).mk
 
 ifeq ($(SUBTARGET),generic)
