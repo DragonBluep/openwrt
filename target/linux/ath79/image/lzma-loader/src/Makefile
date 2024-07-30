@@ -22,6 +22,7 @@ KERNEL_MAGIC	:=
 BOARD		:=
 FLASH_OFFS	:=
 FLASH_MAX	:=
+WDT_GPIO	:=
 
 CC		:= $(CROSS_COMPILE)gcc
 LD		:= $(CROSS_COMPILE)ld
@@ -74,6 +75,10 @@ endif
 BOARD_DEF := $(shell echo $(strip $(BOARD)) | tr a-z A-Z | tr - _)
 ifneq ($(BOARD_DEF),)
 CFLAGS		+= -DCONFIG_BOARD_$(BOARD_DEF)
+endif
+
+ifneq ($(strip $(WDT_GPIO)),)
+CFLAGS		+= -DCONFIG_WDT_GPIO=$(WDT_GPIO)
 endif
 
 all: loader.elf
