@@ -18,6 +18,7 @@ TARGET_DIR	:=
 FLASH_OFFS	:=
 FLASH_MAX	:=
 BOARD		:=
+WDT_GPIO	:=
 
 ifeq ($(TARGET_DIR),)
 TARGET_DIR	:= $(KDIR)
@@ -46,6 +47,7 @@ loader-compile: $(PKG_BUILD_DIR)/.prepared
 		FLASH_OFFS=$(FLASH_OFFS) \
 		FLASH_MAX=$(FLASH_MAX) \
 		BOARD="$(BOARD)" \
+		WDT_GPIO="$(WDT_GPIO)" \
 		clean all
 
 loader.gz: $(PKG_BUILD_DIR)/loader.bin

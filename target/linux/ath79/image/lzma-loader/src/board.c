@@ -188,38 +188,50 @@ static inline void mr18_init(void)
 static inline void mr18_init(void) { }
 #endif
 
-#if defined(CONFIG_BOARD_HUAWEI_AP5030DN) || defined(CONFIG_BOARD_HUAWEI_AP6010DN)
-static inline void huawei_ap_init(void)
+#ifdef CONFIG_WDT_GPIO
+static inline void gpio_watchdog_preinit(void)
 {
-	const unsigned int watchdog_gpio = 15;
-	unsigned int gpiobase, reg;
+	const unsigned int wdt_gpio = CONFIG_WDT_GPIO;
+	unsigned int chip_rev, funcgrp_addr, gpiobase, reg;
 
 	gpiobase = KSEG1ADDR(AR71XX_GPIO_BASE);
-
-	printf("Huawei AP\n");
 
 	reg = READREG(gpiobase + AR934X_GPIO_REG_FUNC);
 	WRITEREG(gpiobase + AR934X_GPIO_REG_FUNC,
 		 reg | AR934X_GPIO_FUNC_CLK_OBS4_EN);
 
 	reg = READREG(gpiobase + AR71XX_GPIO_REG_OE);
-	WRITEREG(gpiobase + AR71XX_GPIO_REG_OE,
-			reg & ~(1 << watchdog_gpio));
+	WRITEREG(gpiobase + AR71XX_GPIO_REG_OE, reg & ~BIT(wdt_gpio)); 
 
 	/* Set watchdog GPIO MUX to output CLK_OBS4 (= AHB_CLK/2) to
 	 * keep the watchdog happy until wdt-gpio takes over.
 	 */
-	reg = READREG(gpiobase + AR934X_GPIO_REG_OUT_FUNC3);
-#if defined(CONFIG_BOARD_HUAWEI_AP5030DN)
-	WRITEREG(gpiobase + AR934X_GPIO_REG_OUT_FUNC3,
-		 reg | (QCA955X_GPIO_OUTSEL_CLK_OBS4 << 24));
-#elif defined(CONFIG_BOARD_HUAWEI_AP6010DN)
-	WRITEREG(gpiobase + AR934X_GPIO_REG_OUT_FUNC3,
-		 reg | (AR934X_GPIO_OUTSEL_CLK_OBS4 << 24));
-#endif
+	funcgrp_addr = gpiobase + AR934X_GPIO_REG_OUT_FUNC0 + 4 * (wdt_gpio / 4);
+	reg = READREG(funcgrp_addr);
+	chip_rev = READREG(KSEG1ADDR(AR71XX_RESET_BASE) +
+			   AR71XX_RESET_REG_REV_ID) & REV_ID_MAJOR_MASK;
+	switch (chip_rev) {
+	case REV_ID_MAJOR_AR9341:
+	case REV_ID_MAJOR_AR9342:
+	case REV_ID_MAJOR_AR9344:
+		reg |= AR934X_GPIO_OUTSEL_CLK_OBS4 << 8 * (wdt_gpio % 4);
+		break;
+	case REV_ID_MAJOR_QCA9533:
+	case REV_ID_MAJOR_QCA9533_V2:
+	case REV_ID_MAJOR_QCA9556:
+	case REV_ID_MAJOR_QCA9558:
+		reg |= QCA955X_GPIO_OUTSEL_CLK_OBS4 << 8 * (wdt_gpio % 4);
+		break;
+	default:
+		printf("not support GPIO watchdog preinit yet!\n");
+		return;
+	}
+	WRITEREG(funcgrp_addr, reg);
+
+	printf("set watchdog feeding source to AHB_CLK/2\n");
 }
 #else
-static inline void huawei_ap_init(void) {}
+static inline void gpio_watchdog_preinit(void) {}
 #endif
 
 #if defined(CONFIG_BOARD_NEC_WF1200HP) || \
@@ -359,8 +371,8 @@ static inline void nec_aterm_init(void) {}
 
 void board_init(void)
 {
+	gpio_watchdog_preinit();
 	tlwr1043nd_init();
 	mr18_init();
-	huawei_ap_init();
 	nec_aterm_init();
 }
