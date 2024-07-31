@@ -865,21 +865,25 @@ endef
 TARGET_DEVICES += comfast_cf-ew72
 
 define Device/comfast_cf-wr650ac-v1
+  $(Device/uimage-lzma-loader)
   SOC := qca9558
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-WR650AC
   DEVICE_VARIANT := v1
   DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  LOADER_WDT_GPIO := 17
   IMAGE_SIZE := 16128k
 endef
 TARGET_DEVICES += comfast_cf-wr650ac-v1
 
 define Device/comfast_cf-wr650ac-v2
+  $(Device/uimage-lzma-loader)
   SOC := qca9558
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-WR650AC
   DEVICE_VARIANT := v2
   DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  LOADER_WDT_GPIO := 17
   IMAGE_SIZE := 16000k
 endef
 TARGET_DEVICES += comfast_cf-wr650ac-v2
