@@ -47,6 +47,9 @@
 
 	watchdog {
 		compatible = "linux,wdt-gpio";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&enable_gpio_17>;
 		gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
 		hw_algo = "toggle";
 		hw_margin_ms = <500>;
@@ -101,6 +104,12 @@
 	fixed-link {
 		speed = <1000>;
 		full-duplex;
+	};
+};
+
+&pinmux {
+	enable_gpio_17: pinmux_enable_gpio_17 {
+		pinctrl-single,bits = <0x10 0x00 0x0000ff00>;
 	};
 };
 
