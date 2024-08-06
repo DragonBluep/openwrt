@@ -1,0 +1,3 @@
+CONFIG_TARGET_ramips=y
+CONFIG_TARGET_ramips_rt3883=y
+CONFIG_TARGET_ramips_rt3883_DEVICE_belkin_f9k1109v1=y
