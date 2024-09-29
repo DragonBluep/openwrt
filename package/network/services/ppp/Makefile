@@ -13,15 +13,15 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/ppp-project/ppp
-PKG_SOURCE_DATE:=2022-12-10
-PKG_SOURCE_VERSION:=760ce18f82670eb81cc186fb792919339a2e2fbe
-PKG_MIRROR_HASH:=5f11280c2709727dcbce22bfaa1cb4bfcf7ba14c5c5d712d9eee9273bb0b36dd
+PKG_SOURCE_DATE:=2024-09-18
+PKG_SOURCE_VERSION:=d5aeec65752d4a9b3bb46771d0b221c4a4a6539e
+PKG_MIRROR_HASH:=2689aefd1ddad39275be105ad604b2389b5995035c4fe76dea116300380be2d6
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=BSD-4-Clause
 PKG_CPE_ID:=cpe:/a:samba:ppp
 PKG_FIXUP:=autoreconf
 
-PKG_RELEASE_VERSION:=2.5.0
+PKG_RELEASE_VERSION:=2.5.1
 PKG_VERSION:=$(PKG_RELEASE_VERSION).git-$(PKG_SOURCE_DATE)
 # pcap is statically linked in patch #310:
 PKG_BUILD_DEPENDS:=libpcap
@@ -40,9 +40,11 @@ CONFIGURE_VARS += \
 	enable_peap=no
 
 CONFIGURE_ARGS += \
+	with_openssl=no \
+	with_pam=no \
 	with_pcap=no \
-	with_static_pcap=yes \
-	with_openssl=no
+	with_srp=no \
+	with_static_pcap=yes
 
 define Package/ppp/Default
   SECTION:=net
