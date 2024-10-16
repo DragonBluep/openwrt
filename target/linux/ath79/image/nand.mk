@@ -500,9 +500,12 @@ TARGET_DEVICES += zte_mf286c
 
 define Device/zte_mf286r
   $(Device/zte_mf28x_common)
+  $(Device/uimage-lzma-loader)
   DEVICE_MODEL := MF286R
   DEVICE_PACKAGES += ath10k-firmware-qca9888-ct kmod-usb-net-rndis kmod-usb-acm \
 	comgt-ncm
+#   KERNEL := kernel-bin | append-dtb | lzma -d20 | uImage lzma
+#   KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma -d20 | uImage lzma
 endef
 TARGET_DEVICES += zte_mf286r
 
