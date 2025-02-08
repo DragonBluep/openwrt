@@ -25,5 +25,6 @@
 };
 
 &nand_ubi {
+	compatible = "linux,ubi";
 	label = "ubi";
 };

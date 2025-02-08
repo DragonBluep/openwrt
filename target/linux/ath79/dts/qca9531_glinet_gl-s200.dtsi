@@ -166,6 +166,7 @@
 			#size-cells = <1>;
 
 			nand_ubi: partition@0 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x000000 0x8000000>;
 			};
