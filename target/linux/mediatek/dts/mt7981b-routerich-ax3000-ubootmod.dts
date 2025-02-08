@@ -19,9 +19,9 @@
 	};
 
 	partition@580000 {
+		compatible = "linux,ubi";
 		label = "ubi";
 		reg = <0x580000 0x7a80000>;
-		compatible = "linux,ubi";
 
 		volumes {
 			ubi_fit_volume: ubi-volume-fit {

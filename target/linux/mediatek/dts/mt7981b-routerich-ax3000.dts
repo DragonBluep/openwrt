@@ -20,6 +20,7 @@
 	};
 
 	partition@580000 {
+		compatible = "linux,ubi";
 		label = "ubi";
 		reg = <0x580000 0x7000000>;
 	};
@@ -132,6 +133,7 @@
 			};
 
 			partition@580000 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x580000 0x7000000>;
 			};

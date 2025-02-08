@@ -310,9 +310,9 @@
 			 * - obr
 			 */
 			partition@340000 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x340000 0x7280000>;
-				compatible = "linux,ubi";
 
 				volumes {
 					ubi_rootfs: ubi-volume-fit {

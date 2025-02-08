@@ -219,6 +219,7 @@
 			};
 
 			partition@580000 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x580000 0x5140000>;
 			};

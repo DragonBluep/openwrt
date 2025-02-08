@@ -298,6 +298,7 @@
 				};
 
 				partition@800000 {
+					compatible = "linux,ubi";
 					label = "ubi";
 					reg = <0x00800000 0x02500000>;
 				};
@@ -317,6 +318,7 @@
 				};
 
 				partition@800000 {
+					compatible = "linux,ubi";
 					label = "ubi";
 					reg = <0x00800000 0x02500000>;
 				};
