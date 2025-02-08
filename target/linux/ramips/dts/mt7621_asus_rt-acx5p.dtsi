@@ -117,6 +117,7 @@
 		};
 
 		partition@7e0000 {
+			compatible = "linux,ubi";
 			label = "ubi";
 			reg = <0x7e0000 0x2e00000>;
 		};
