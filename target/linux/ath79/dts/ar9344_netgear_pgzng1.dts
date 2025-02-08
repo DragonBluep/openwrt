@@ -250,6 +250,7 @@
 
 		/* factory rootfs used to be reg = <0x280000 0x5000000> */
 		partition@580000 {
+			compatible = "linux,ubi";
 			label = "ubi";
 			reg = <0x580000 0x4d00000>;
 		};
