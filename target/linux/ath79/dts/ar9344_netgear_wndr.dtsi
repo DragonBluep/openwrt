@@ -90,6 +90,7 @@
 			#size-cells = <1>;
 
 			ubi@0 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x0 0x7500000>;
 			};
