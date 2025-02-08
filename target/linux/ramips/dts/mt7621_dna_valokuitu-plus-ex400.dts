@@ -75,9 +75,9 @@
 		};
 
 		partition@100000 {
+			compatible = "linux,ubi";
 			reg = <0x100000 0xff00000>;
 			label = "ubi";
-			compatible = "linux,ubi";
 
 			volumes {
 				ubi-volume-env1 {
