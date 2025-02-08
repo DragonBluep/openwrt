@@ -233,6 +233,7 @@
 				read-only;
 			};
 			partition@400000 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x00400000 0x07C00000>;
 			};

@@ -187,6 +187,7 @@
 			#size-cells = <1>;
 
 			nand_rootfs: partition@0 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				/* reg defined in 64M/128M variant dts. */
 			};

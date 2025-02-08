@@ -112,6 +112,7 @@
 			#size-cells = <1>;
 
 			partition@0 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x00000000 0x04000000>;
 			};

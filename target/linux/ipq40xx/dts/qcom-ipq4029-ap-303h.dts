@@ -405,6 +405,7 @@
 
 			partition@2000000 {
 				/* 'aos1' in Aruba firmware */
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x2000000 0x2000000>;
 			};
