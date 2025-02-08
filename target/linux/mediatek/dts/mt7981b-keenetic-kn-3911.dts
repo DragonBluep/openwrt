@@ -74,6 +74,7 @@
 			};
 
 			partition@400000 {
+				compatible = "linux,ubi";
 				label = "ubi";
 				reg = <0x600000 0x0>;
 			};
