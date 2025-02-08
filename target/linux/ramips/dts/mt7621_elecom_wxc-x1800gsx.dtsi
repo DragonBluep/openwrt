@@ -182,6 +182,7 @@
 
 		/* stock: (unused) */
 		partition@1b80000 {
+			compatible = "linux,ubi";
 			label = "ubi";
 			reg = <0x1b80000 0x6480000>;
 		};
