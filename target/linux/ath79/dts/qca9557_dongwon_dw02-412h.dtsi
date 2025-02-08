@@ -149,6 +149,7 @@
 		};
 
 		ubi: partition@1800000 {
+			compatible = "linux,ubi";
 			label = "ubi";
 		};
 	};
