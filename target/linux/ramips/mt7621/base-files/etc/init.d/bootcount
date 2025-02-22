@@ -16,7 +16,7 @@ boot() {
 			count=1 bs=1 seek=$((0x20001))
 		;;
 	jdcloud,re-cp-02)
-		echo -e "bootcount 0\nbootlimit 5\nupgrade_available 1"  | /usr/sbin/fw_setenv -s -
+		echo -e "bootcount 0\nbootlimit 5\nupgrade_available 1" | /usr/sbin/fw_setenv -s -
 		;;
 	linksys,e5600|\
 	linksys,ea6350-v4|\

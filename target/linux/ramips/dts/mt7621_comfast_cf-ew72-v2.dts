@@ -106,7 +106,7 @@
 				read-only;
 			};
 
-			partition@40000  {
+			partition@40000 {
 				label = "factory";
 				reg = <0x40000 0x10000>;
 				read-only;
@@ -131,11 +131,11 @@
 					};
 
 					// Serial number can be found in "factory" at 0xE100.
-					//   it starts and ends with double quotes `"` and is ASCII string
+					// it starts and ends with double quotes `"` and is ASCII string
 				};
 			};
 
-			partition@50000  {
+			partition@50000 {
 				label = "firmware";
 				compatible = "denx,uimage";
 				reg = <0x50000 0xfb0000>;

@@ -61,7 +61,7 @@ platform_do_upgrade() {
 	asus,rt-ac65p|\
 	asus,rt-ac85p)
 		echo "Backing up firmware"
-		dd if=/dev/mtd4 bs=1024 count=4096  > /tmp/backup_firmware.bin
+		dd if=/dev/mtd4 bs=1024 count=4096 > /tmp/backup_firmware.bin
 		dd if=/dev/mtd5 bs=1024 count=52224 >> /tmp/backup_firmware.bin
 		mtd -e firmware2 write /tmp/backup_firmware.bin firmware2
 		;;
