@@ -13,7 +13,7 @@ jboot_eeprom_extract() {
 	[ -n "$mtd" ] || \
 		caldata_die "no mtd device found for partition $part"
 
-	jboot_config_read -i $mtd -o $offset -e /lib/firmware/$FIRMWARE  2>/dev/null || \
+	jboot_config_read -i $mtd -o $offset -e /lib/firmware/$FIRMWARE 2>/dev/null || \
 		caldata_die "failed to extract from $mtd"
 }
 

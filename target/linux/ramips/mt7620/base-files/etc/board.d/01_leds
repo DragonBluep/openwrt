@@ -102,7 +102,7 @@ domywifi,dw22d)
 	ucidef_set_led_switch "lan3" "lan3" "amber:lan3" "switch0" "0x08"
 	ucidef_set_led_switch "lan4" "lan4" "amber:lan4" "switch0" "0x10"
 	ucidef_set_led_switch "wan" "wan" "amber:wan" "switch0" "0x01"
-		;;
+	;;
 dovado,tiny-ac)
 	ucidef_set_led_netdev "wifi_led" "wifi" "orange:wifi" "wlan0"
 	;;
@@ -120,7 +120,7 @@ edimax,ew-7478apc)
 ampedwireless,b1200ex|\
 edimax,ew-7476rpc|\
 edimax,ew-7478ac)
-	ucidef_set_led_switch "lan" "lan" "green:lan"  "switch0" "0x20"
+	ucidef_set_led_switch "lan" "lan" "green:lan" "switch0" "0x20"
 	;;
 elecom,wrh-300cr)
 	ucidef_set_led_netdev "lan" "lan" "green:ethernet" "eth0"

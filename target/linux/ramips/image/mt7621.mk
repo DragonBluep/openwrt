@@ -400,7 +400,7 @@ define Device/asus_rp-ac56
   IMAGES += factory.bin
   IMAGE/factory.bin := append-kernel | append-rootfs | pad-rootfs | check-size
   IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | \
-        check-size | append-metadata
+	check-size | append-metadata
 endef
 TARGET_DEVICES += asus_rp-ac56
 
@@ -702,17 +702,17 @@ endef
 TARGET_DEVICES += comfast_cf-e390ax
 
 define Device/comfast_cf-ew72-v2
-    $(Device/dsa-migration)
-    $(Device/uimage-lzma-loader)
-    IMAGE_SIZE := 15808k
-    DEVICE_VENDOR := COMFAST
-    DEVICE_MODEL := CF-EW72 V2
-    DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615e kmod-mt7663-firmware-ap \
-        -uboot-envtools
-    IMAGES += factory.bin
-    IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | \
-        check-size | append-metadata
-    IMAGE/factory.bin := append-kernel | append-rootfs | pad-rootfs | check-size
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  IMAGE_SIZE := 15808k
+  DEVICE_VENDOR := COMFAST
+  DEVICE_MODEL := CF-EW72 V2
+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615e kmod-mt7663-firmware-ap \
+	-uboot-envtools
+  IMAGES += factory.bin
+  IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | \
+	check-size | append-metadata
+  IMAGE/factory.bin := append-kernel | append-rootfs | pad-rootfs | check-size
 endef
 TARGET_DEVICES += comfast_cf-ew72-v2
 
@@ -886,8 +886,8 @@ define Device/dlink_dxx-1xx0-x1
   IMAGE_SIZE := 16064k
   IMAGES += factory.bin
   IMAGE/factory.bin := append-kernel | append-rootfs | \
-    pad-rootfs -x 60 | append-md5sum-ascii-salted ffff | \
-    append-string $$$$(DLINK_HWID) | check-size
+	pad-rootfs -x 60 | append-md5sum-ascii-salted ffff | \
+	append-string $$$$(DLINK_HWID) | check-size
 endef
 
 define Device/dlink_dap-1620-b1
@@ -987,7 +987,7 @@ define Device/dlink_dir-2150-r1
   DEVICE_VENDOR := D-Link
   DEVICE_MODEL := DIR-2150
   DEVICE_VARIANT := R1
-  DEVICE_PACKAGES :=  -uboot-envtools kmod-mt7603 kmod-mt7615-firmware kmod-usb3
+  DEVICE_PACKAGES := -uboot-envtools kmod-mt7603 kmod-mt7615-firmware kmod-usb3
   KERNEL := $$(KERNEL)
   IMAGES += factory.bin
   IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
@@ -1481,7 +1481,7 @@ define Device/gemtek_wvrtm-1xxacn
   IMAGE_SIZE := 122368k
   DEVICE_VENDOR := Gemtek
   DEVICE_PACKAGES := kmod-gpio-nxp-74hc164 kmod-spi-gpio \
-  kmod-usb3 -uboot-envtools 
+	kmod-usb3 -uboot-envtools
 endef
 
 define Device/gemtek_wvrtm-127acn
@@ -3132,9 +3132,9 @@ define Device/ubnt_edgerouter_common
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
   DEVICE_PACKAGES += -wpad-basic-mbedtls -uboot-envtools
   DEVICE_COMPAT_VERSION := 2.0
-  DEVICE_COMPAT_MESSAGE :=  Partition table has been changed due to kernel size restrictions. \
-    Refer to the wiki page for instructions to migrate to the new layout: \
-    https://openwrt.org/toh/ubiquiti/edgerouter_x_er-x_ka
+  DEVICE_COMPAT_MESSAGE := Partition table has been changed due to kernel size restrictions. \
+	Refer to the wiki page for instructions to migrate to the new layout: \
+	https://openwrt.org/toh/ubiquiti/edgerouter_x_er-x_ka
 endef
 
 define Device/ubnt_edgerouter-x
@@ -3649,7 +3649,7 @@ define Device/zbtlink_zbt-wg1602-v04-16m
   DEVICE_MODEL := ZBT-WG1602-V04
   DEVICE_VARIANT := 16M
   DEVICE_PACKAGES := kmod-mmc-mtk kmod-mt7603 kmod-mt76x2 kmod-usb3 \
-        kmod-usb-ledtrig-usbport -uboot-envtools
+	kmod-usb-ledtrig-usbport -uboot-envtools
 endef
 TARGET_DEVICES += zbtlink_zbt-wg1602-v04-16m
 
@@ -3661,7 +3661,7 @@ define Device/zbtlink_zbt-wg1602-v04-32m
   DEVICE_MODEL := ZBT-WG1602-V04
   DEVICE_VARIANT := 32M
   DEVICE_PACKAGES := kmod-mmc-mtk kmod-mt7603 kmod-mt76x2 kmod-usb3 \
-        kmod-usb-ledtrig-usbport -uboot-envtools
+	kmod-usb-ledtrig-usbport -uboot-envtools
 endef
 TARGET_DEVICES += zbtlink_zbt-wg1602-v04-32m
 
