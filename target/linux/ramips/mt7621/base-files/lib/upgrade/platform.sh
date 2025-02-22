@@ -60,7 +60,7 @@ platform_do_upgrade() {
 	asus,rt-ac65p|\
 	asus,rt-ac85p)
 		echo "Backing up firmware"
-		dd if=/dev/mtd4 bs=1024 count=4096  > /tmp/backup_firmware.bin
+		dd if=/dev/mtd4 bs=1024 count=4096 > /tmp/backup_firmware.bin
 		dd if=/dev/mtd5 bs=1024 count=52224 >> /tmp/backup_firmware.bin
 		mtd -e firmware2 write /tmp/backup_firmware.bin firmware2
 		;;
@@ -84,7 +84,7 @@ platform_do_upgrade() {
 	dlink,covr-x1860-a1|\
 	dlink,dap-x1860-a1|\
 	dlink,dir-1960-a1|\
-        dlink,dir-2055-a1|\
+	dlink,dir-2055-a1|\
 	dlink,dir-2150-a1|\
 	dlink,dir-2150-r1|\
 	dlink,dir-2640-a1|\
