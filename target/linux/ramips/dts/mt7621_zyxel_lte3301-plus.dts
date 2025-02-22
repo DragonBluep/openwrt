@@ -192,7 +192,7 @@
 &pcie0 {
 	status = "okay";
 	mt7615d@0,0 {
-		/* In reality  at hangs at pcie1, this is a driver bug */
+		/* In reality at hangs at pcie1, this is a driver bug */
 		compatible = "pci14c3,7615";
 		reg = <0x0000 0 0 0 0>;
 		mediatek,firmware-eeprom = "mt7615e_eeprom.bin";

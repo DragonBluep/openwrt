@@ -110,7 +110,7 @@
 				read-only;
 			};
 
-			/* 0xdf0000 - 0xf30000 unused  */
+			/* 0xdf0000 - 0xf30000 unused */
 
 			partition@f30000 {
 				label = "mutil-log";
