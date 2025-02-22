@@ -180,8 +180,7 @@
 
 &state_default {
 	default {
-		groups = "i2c", "uartf", "pa", "spi refclk",
-			       "wled";
+		groups = "i2c", "uartf", "pa", "spi refclk", "wled";
 		function = "gpio";
 	};
 };

@@ -53,7 +53,7 @@ wifire,s1500-nbn)
 	ucidef_set_led_netdev "lan2" "lan2" "green:lan-2" "lan2" "link tx rx"
 	ucidef_set_led_netdev "lan3" "lan3" "green:lan-3" "lan3" "link tx rx"
 	ucidef_set_led_netdev "lan4" "lan4" "green:lan-4" "lan4" "link tx rx"
-	ucidef_set_led_netdev "wan"  "wan"  "green:wan"  "wan"  "link tx rx"
+	ucidef_set_led_netdev "wan" "wan" "green:wan" "wan" "link tx rx"
 	;;
 belkin,rt1800)
 	ucidef_set_led_netdev "wan" "wan" "white:wan" "wan"
