@@ -224,16 +224,16 @@ tplink,ec330-g5u-v1)
 	ucidef_set_led_netdev "wan" "Internet" "blue:wan" "wan" "link tx rx"
 	ucidef_set_led_netdev "wan-off" "Internet-off" "amber:wan" "wan" "link"
 	;;
+tplink,mr600-v2-eu)
+	ucidef_set_led_netdev "lan" "LAN" "white:lan" "br-lan"
+	ucidef_set_led_netdev "wan" "WAN" "white:wan" "wan"
+	ucidef_set_led_netdev "4g" "4G" "white:4g" "wwan0"
+	;;
 tplink,re350-v1)
 	ucidef_set_led_netdev "wifi2g" "Wifi 2.4G" "blue:wifi2G" "wlan0"
 	ucidef_set_led_netdev "wifi5g" "Wifi 5G" "blue:wifi5G" "wlan1"
 	ucidef_set_led_netdev "eth_act" "LAN act" "green:eth_act" "lan" "tx rx"
 	ucidef_set_led_netdev "eth_link" "LAN link" "green:eth_link" "lan" "link"
-	;;
-tplink,mr600-v2-eu)
-	ucidef_set_led_netdev "lan" "LAN" "white:lan" "br-lan"
-	ucidef_set_led_netdev "wan" "WAN" "white:wan" "wan"
-	ucidef_set_led_netdev "4g" "4G" "white:4g" "wwan0"
 	;;
 tplink,re500-v1|\
 tplink,re650-v1|\

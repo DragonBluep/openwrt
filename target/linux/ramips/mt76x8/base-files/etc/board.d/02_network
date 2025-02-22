@@ -263,10 +263,6 @@ ramips_setup_macs()
 	asus,rt-ac1200)
 		wan_mac=$(mtd_get_mac_binary factory 0x22)
 		;;
-	elecom,wrc-1167fs)
-		wan_mac=$(mtd_get_mac_binary factory 0x22)
-		label_mac=$wan_mac
-		;;
 	buffalo,wcr-1166ds)
 		wan_mac=$(mtd_get_mac_ascii board_data "mac")
 		lan_mac=$wan_mac
@@ -295,6 +291,10 @@ ramips_setup_macs()
 	wrtnode,wrtnode2p|\
 	wrtnode,wrtnode2r)
 		wan_mac=$(macaddr_add "$(mtd_get_mac_binary factory 0x4)" 1)
+		;;
+	elecom,wrc-1167fs)
+		wan_mac=$(mtd_get_mac_binary factory 0x22)
+		label_mac=$wan_mac
 		;;
 	hiwifi,hc5611|\
 	hiwifi,hc5661a|\

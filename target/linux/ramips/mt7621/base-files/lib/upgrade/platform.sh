@@ -46,6 +46,13 @@ platform_do_upgrade() {
 		fi
 		;;
 	iptime,ax2002m|\
+	asus,rt-ac65p|\
+	asus,rt-ac85p)
+		echo "Backing up firmware"
+		dd if=/dev/mtd4 bs=1024 count=4096 > /tmp/backup_firmware.bin
+		dd if=/dev/mtd5 bs=1024 count=52224 >> /tmp/backup_firmware.bin
+		mtd -e firmware2 write /tmp/backup_firmware.bin firmware2
+		;;
 	iptime,ax2004m)
 		if [ "$(fw_printenv -n boot_from 2>/dev/null)" != "firmware1" ]; then
 			fw_setenv boot_from firmware1 || exit 1
@@ -57,13 +64,6 @@ platform_do_upgrade() {
 	mikrotik,routerboard-m11g|\
 	mikrotik,routerboard-m33g)
 		[ "$(rootfs_type)" = "tmpfs" ] && mtd erase firmware
-		;;
-	asus,rt-ac65p|\
-	asus,rt-ac85p)
-		echo "Backing up firmware"
-		dd if=/dev/mtd4 bs=1024 count=4096 > /tmp/backup_firmware.bin
-		dd if=/dev/mtd5 bs=1024 count=52224 >> /tmp/backup_firmware.bin
-		mtd -e firmware2 write /tmp/backup_firmware.bin firmware2
 		;;
 	esac
 
@@ -98,13 +98,13 @@ platform_do_upgrade() {
 	elecom,wmc-x1800gst|\
 	elecom,wsc-x1800gs|\
 	etisalat,s3|\
+	gemtek,wvrtm-127acn|\
+	gemtek,wvrtm-130acn|\
 	h3c,tx1800-plus|\
 	h3c,tx1801-plus|\
 	h3c,tx1806|\
 	haier,har-20s2u1|\
 	hiwifi,hc5962|\
-	gemtek,wvrtm-127acn|\
-	gemtek,wvrtm-130acn|\
 	iptime,a3004t|\
 	iptime,ax2002m|\
 	iptime,ax2004m|\

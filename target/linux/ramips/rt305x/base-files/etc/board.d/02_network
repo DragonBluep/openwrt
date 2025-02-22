@@ -244,8 +244,8 @@ ramips_setup_macs()
 	engenius,esr-9753|\
 	hame,mpr-a1|\
 	hauppauge,broadway|\
-	huawei,d105|\
 	hilink,hlk-rm04|\
+	huawei,d105|\
 	nexaira,bc2|\
 	olimex,rt5350f-olinuxino|\
 	olimex,rt5350f-olinuxino-evb|\
