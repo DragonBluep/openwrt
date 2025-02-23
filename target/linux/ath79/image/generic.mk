@@ -1998,8 +1998,8 @@ define Device/kuwfi_n650
   IMAGE_SIZE := 15040k
   IMAGES += factory.bin
   IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
-    append-rootfs | pad-rootfs | check-size | pad-to 13568k | \
-    append-loader-okli-uimage $(1) | pad-to 64k | check-size $$$$(FACTORY_SIZE)
+	append-rootfs | pad-rootfs | check-size | pad-to 13568k | \
+	append-loader-okli-uimage $(1) | pad-to 64k | check-size $$$$(FACTORY_SIZE)
   ARTIFACTS := loader.bin
   ARTIFACT/loader.bin := append-loader-okli-uimage $(1) | pad-to 64k
 endef
@@ -2979,7 +2979,7 @@ define Device/ruckus_r500
   IMAGE_SIZE := 63744k
   BLOCKSIZE := 256k
   DEVICE_PACKAGES += kmod-ath10k-ct ath10k-firmware-qca988x-ct \
-		     kmod-i2c-gpio kmod-tpm-i2c-infineon
+	kmod-i2c-gpio kmod-tpm-i2c-infineon
 endef
 TARGET_DEVICES += ruckus_r500
 
