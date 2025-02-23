@@ -53,10 +53,10 @@
 		};
 
 		rfkill {
-		       label = "RFKILL button";
-		       linux,code = <KEY_RFKILL>;
-		       gpios = <&gpio 21 GPIO_ACTIVE_LOW>;
-		       debounce-interval = <60>;
+			label = "RFKILL button";
+			linux,code = <KEY_RFKILL>;
+			gpios = <&gpio 21 GPIO_ACTIVE_LOW>;
+			debounce-interval = <60>;
 		};
 	};
 };
