@@ -72,7 +72,7 @@
 				read-only;
 
 				nvmem-layout {
-			     		compatible = "fixed-layout";
+					compatible = "fixed-layout";
 					#address-cells = <1>;
 					#size-cells = <1>;
 

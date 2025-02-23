@@ -276,9 +276,9 @@ define Device/tplink_tl-wpa8630p-v2
   DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
   DEVICE_COMPAT_VERSION := 2.0
   DEVICE_COMPAT_MESSAGE := The flash erase blocksize has changed to 4k from the 64k in previous versions, \
-    so the JFFS2 settings partition MUST be reformatted to avoid data corruption. \
-    Backup your settings before upgrading, then during sysupgrade, \
-    de-select "Keep settings" and select "Force" to continue (equivilant to "sysupgrade -n -F").
+	so the JFFS2 settings partition MUST be reformatted to avoid data corruption. \
+	Backup your settings before upgrading, then during sysupgrade, \
+	de-select "Keep settings" and select "Force" to continue (equivilant to "sysupgrade -n -F").
   DEFAULT := n
 endef
 

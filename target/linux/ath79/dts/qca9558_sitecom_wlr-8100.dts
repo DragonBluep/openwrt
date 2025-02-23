@@ -104,7 +104,7 @@
 
 			partition@f90000 {
 				label = "backup";
-				reg = <0xf90000  0x010000>;
+				reg = <0xf90000 0x010000>;
 				read-only;
 			};
 

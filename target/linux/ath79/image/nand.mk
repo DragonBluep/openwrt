@@ -12,11 +12,11 @@ define Build/dongwon-header
 endef
 
 define Build/meraki-header
-        -$(STAGING_DIR_HOST)/bin/mkmerakifw \
-                -B $(1) -s \
-                -i $@ \
-                -o $@.new
-        @mv $@.new $@
+	-$(STAGING_DIR_HOST)/bin/mkmerakifw \
+		-B $(1) -s \
+		-i $@ \
+		-o $@.new
+	@mv $@.new $@
 endef
 
 # attention: only zlib compression is allowed for the boot fs
@@ -346,7 +346,7 @@ define Device/netgear_pgzng1
   DEVICE_ALT0_MODEL := Pulse Gateway
   DEVICE_ALT0_VENDOR := ADT
   DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport kmod-i2c-gpio \
-    kmod-leds-pca955x kmod-rtc-isl1208 kmod-spi-dev
+	kmod-leds-pca955x kmod-rtc-isl1208 kmod-spi-dev
   KERNEL_SIZE := 5120k
   IMAGE_SIZE := 83968k
   PAGESIZE := 2048
