@@ -429,8 +429,7 @@
 
 	cs-gpios = <&qcom_pinmux 57 GPIO_ACTIVE_HIGH>;
 
-	dmas = <&adm_dma 8 0xb>,
-	       <&adm_dma 7 0x14>;
+	dmas = <&adm_dma 8>, <&adm_dma 7>;
 	dma-names = "rx", "tx";
 
 	/*
@@ -448,17 +447,14 @@
 &pcie0 {
 	status = "okay";
 
-	pcie@0 {
+	bridge@0,0 {
 		reg = <0 0 0 0 0>;
-		#interrupt-cells = <1>;
 		#size-cells = <2>;
 		#address-cells = <3>;
-		device_type = "pci";
-		interrupt-controller;
+		ranges;
 
-		ath10k@0,0 {
+		wifi@0,0 {
 			reg = <0 0 0 0 0>;
-			device_type = "pci";
 			qcom,ath10k-sa-gpio = <2 3 4 0>;
 			qcom,ath10k-sa-gpio-func = <5 5 5 0>;
 		};
@@ -468,17 +464,14 @@
 &pcie1 {
 	status = "okay";
 
-	pcie@0 {
+	bridge@0,0 {
 		reg = <0 0 0 0 0>;
-		#interrupt-cells = <1>;
 		#size-cells = <2>;
 		#address-cells = <3>;
-		device_type = "pci";
-		interrupt-controller;
+		ranges;
 
-		ath10k@0,0 {
+		wifi@0,0 {
 			reg = <0 0 0 0 0>;
-			device_type = "pci";
 			qcom,ath10k-sa-gpio = <2 3 4 0>;
 			qcom,ath10k-sa-gpio-func = <5 5 5 0>;
 		};
@@ -488,17 +481,14 @@
 &pcie2 {
 	status = "okay";
 
-	pcie@0 {
+	bridge@0,0 {
 		reg = <0 0 0 0 0>;
-		#interrupt-cells = <1>;
 		#size-cells = <2>;
 		#address-cells = <3>;
-		device_type = "pci";
-		interrupt-controller;
+		ranges;
 
-		ath10k@0,0 {
+		wifi@0,0 {
 			reg = <0 0 0 0 0>;
-			device_type = "pci";
 		};
 	};
 };
