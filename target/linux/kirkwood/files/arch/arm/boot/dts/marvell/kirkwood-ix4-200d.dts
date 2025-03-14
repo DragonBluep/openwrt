@@ -59,14 +59,13 @@
 
 		spi3 {
 			compatible = "spi-gpio";
-			#address-cells = <0x1>;
-			ranges;
+			#address-cells = <1>;
+			#size-cells = <0>;
 			status = "okay";
 			sck-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
 			mosi-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
 			cs-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
 			num-chipselects = <1>;
-			#size-cells = <0>;
 
 			gpio_spi: gpio_spi@0 {
 				compatible = "fairchild,74hc595";
