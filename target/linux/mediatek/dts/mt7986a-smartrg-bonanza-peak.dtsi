@@ -558,6 +558,8 @@
 
 	system-leds@30 {
 		compatible = "srg,sysled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		reg = <0x30>;
 		#address-cells = <1>;
 		#size-cells = <0>;
