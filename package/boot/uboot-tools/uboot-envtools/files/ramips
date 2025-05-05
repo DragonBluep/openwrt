@@ -25,7 +25,7 @@ meig,slt866|\
 qding,qc202|\
 sitecom,wlr-4100-v1-002|\
 zyxel,keenetic-lite-iii-a)
-	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x1000" "0x1000"
+	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x1000" "0x10000"
 	;;
 alfa-network,ax1800rm|\
 allnet,all0256n-4m|\
@@ -42,7 +42,7 @@ ampedwireless,ally-r1900k)
 	;;
 arcadyan,we420223-99|\
 dlink,dir-806a-b1)
-	ubootenv_add_uci_config "/dev/mtd2" "0x0" "0x1000" "0x1000"
+	ubootenv_add_uci_config "/dev/mtd2" "0x0" "0x1000" "0x10000"
 	;;
 asus,rt-ax53u|\
 asus,rt-ax54|\
@@ -120,7 +120,7 @@ sim,simax1800u)
 	;;
 hootoo,ht-tm05|\
 ravpower,rp-wd03)
-	ubootenv_add_mtd "u-boot-env" "0x4000" "0x1000" "0x1000"
+	ubootenv_add_mtd "u-boot-env" "0x4000" "0x1000" "0x10000"
 	;;
 netgear,wax214v2)
 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x20000" "0x20000"
@@ -129,7 +129,7 @@ netgear,wax214v2)
 snr,snr-cpe-me1|\
 snr,snr-cpe-me2-sfp|\
 snr,cpe-w4n-mt)
-	ubootenv_add_mtd "uboot-env" "0x0" "0x1000" "0x1000"
+	ubootenv_add_mtd "uboot-env" "0x0" "0x1000" "0x10000"
 	;;
 xiaomi,mi-router-3-pro|\
 xiaomi,mi-router-3g|\
