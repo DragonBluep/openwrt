@@ -24,7 +24,7 @@ linksys,re7000|\
 meig,slt866|\
 sitecom,wlr-4100-v1-002|\
 zyxel,keenetic-lite-iii-a)
-	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x1000" "0x1000"
+	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x1000" "0x10000"
 	;;
 alfa-network,ax1800rm|\
 allnet,all0256n-4m|\
@@ -35,7 +35,7 @@ yuncore,ax820)
 	;;
 arcadyan,we420223-99|\
 dlink,dir-806a-b1)
-	ubootenv_add_uci_config "/dev/mtd2" "0x0" "0x1000" "0x1000"
+	ubootenv_add_uci_config "/dev/mtd2" "0x0" "0x1000" "0x10000"
 	;;
 ampedwireless,ally-00x19k|\
 ampedwireless,ally-r1900k)
@@ -92,7 +92,7 @@ sim,simax1800u)
 	;;
 hootoo,ht-tm05|\
 ravpower,rp-wd03)
-	ubootenv_add_mtd "u-boot-env" "0x4000" "0x1000" "0x1000"
+	ubootenv_add_mtd "u-boot-env" "0x4000" "0x1000" "0x10000"
 	;;
 beeline,smartbox-flash|\
 iptime,t5004|\
@@ -110,7 +110,7 @@ ubnt,edgerouter-x-sfp)
 snr,snr-cpe-me1|\
 snr,snr-cpe-me2-sfp|\
 snr,cpe-w4n-mt)
-	ubootenv_add_mtd "uboot-env" "0x0" "0x1000" "0x1000"
+	ubootenv_add_mtd "uboot-env" "0x0" "0x1000" "0x10000"
 	;;
 xiaomi,miwifi-mini)
 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x1000" "0x10000"
