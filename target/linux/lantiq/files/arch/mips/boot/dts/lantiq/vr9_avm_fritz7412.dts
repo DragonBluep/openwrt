@@ -160,6 +160,7 @@
 		#size-cells = <2>;
 		#address-cells = <3>;
 		device_type = "pci";
+		ranges;
 
 		wifi@168c,002e {
 			compatible = "pci168c,002e";
