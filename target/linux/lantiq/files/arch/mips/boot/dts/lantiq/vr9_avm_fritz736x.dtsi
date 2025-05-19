@@ -163,6 +163,7 @@
 		#size-cells = <1>;
 		#address-cells = <2>;
 		device_type = "pci";
+		ranges;
 
 		wifi: wifi@0,0 {
 			reg = <0 0 0 0 0>;
