@@ -7,8 +7,8 @@
 
 &partitions {
 	partition@50000 {
-		compatible = "denx,uimage";
-		label = "firmware";
+		//compatible = "denx,uimage";
+		label = "firmwarebak";
 		reg = <0x50000 0x7b0000>;
 	};
 };
