@@ -12,6 +12,24 @@
 		led-upgrade = &led_blue;
 	};
 
+	chosen {
+		bootargs = "console=ttyS0,115200";
+	};
+
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		ramoops@17f0000 {
+			no-map;
+			compatible = "ramoops";
+			reg = <0x017f0000 0x00010000>;
+			record-size = <0x2000>;
+			console-size = <0x4000>;
+		};
+	};
+
 	keys {
 		compatible = "gpio-keys";
 
