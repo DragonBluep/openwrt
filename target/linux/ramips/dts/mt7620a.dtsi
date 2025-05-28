@@ -77,6 +77,8 @@
 
 			interrupt-parent = <&intc>;
 			interrupts = <1>;
+
+			status = "disabled";
 		};
 
 		watchdog: watchdog@120 {
@@ -304,6 +306,8 @@
 
 			interrupt-parent = <&cpuintc>;
 			interrupts = <7>;
+
+			status = "disabled";
 		};
 
 		pcm: pcm@2000 {
