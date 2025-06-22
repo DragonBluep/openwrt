@@ -1,0 +1,132 @@
+From d999fcff932ef330f2b0b4d39a96c2d10213f23a Mon Sep 17 00:00:00 2001
+From: Lukas Wunner <lukas@wunner.de>
+Date: Tue, 25 Feb 2025 18:06:02 +0100
+Subject: [PATCH 2/5] PCI: hotplug: Drop superfluous try_module_get() calls
+
+In December 2002, historic commit
+
+  https://git.kernel.org/tglx/history/c/bec7aa00ffe5
+  ("[PATCH] more module warning fixes")
+
+amended the PCI hotplug core to acquire a reference on the hotplug
+driver module when a sysfs attribute is accessed.  That was necessary
+because back in the day, sysfs code did not take any precautions to
+prevent module unloading when an attribute was accessed.
+
+Soon after in July 2003, historic commit
+
+  https://git.kernel.org/tglx/history/c/1cf6d20f6078
+  ("[PATCH] SYSFS: add module referencing to sysfs attribute files.")
+
+addressed that deficiency.  But the commit neglected to remove the now
+unnecessary reference acquisition from the PCI hotplug core.
+
+The commit acquired a module reference for the entire duration between
+open() and close() of a sysfs attribute.  This made it impossible to
+unload a module while attributes were kept open by user space.
+That's possible today:
+
+When a hotplug driver module is unloaded, it removes sysfs attributes of
+all its hotplug slots by calling pci_hp_del().  This will wait for any
+concurrent user space operation to finish:
+
+  pci_hp_del()
+    fs_remove_slot()
+      sysfs_remove_file()
+        sysfs_remove_file_ns()
+          kernfs_remove_by_name_ns()
+            __kernfs_remove()
+              kernfs_drain()
+
+A user space operation such as read() briefly acquires a reference on
+the attribute with kernfs_get_active().  kernfs_drain() waits until all
+such references are released before allowing attribute removal.  Once
+the attribute is removed, any subsequent user space operation on a still
+open attribute file will return -ENODEV.
+
+Thus, reference acquisition by the PCI hotplug core is still unnecessary
+today.  So drop it at long last.
+
+Link: https://lore.kernel.org/r/ed950fa2722967be4491146c7b867c1e7be11d37.1740501868.git.lukas@wunner.de
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/hotplug/pci_hotplug_core.c | 23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
+
+--- a/drivers/pci/hotplug/pci_hotplug_core.c
++++ b/drivers/pci/hotplug/pci_hotplug_core.c
+@@ -14,7 +14,7 @@
+  *   Scott Murray <scottm@somanetworks.com>
+  */
+ 
+-#include <linux/module.h>	/* try_module_get & module_put */
++#include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+@@ -46,11 +46,8 @@ static int get_##name(struct hotplug_slo
+ {									\
+ 	const struct hotplug_slot_ops *ops = slot->ops;			\
+ 	int retval = 0;							\
+-	if (!try_module_get(slot->owner))				\
+-		return -ENODEV;						\
+ 	if (ops->get_##name)						\
+ 		retval = ops->get_##name(slot, value);			\
+-	module_put(slot->owner);					\
+ 	return retval;							\
+ }
+ 
+@@ -83,10 +80,6 @@ static ssize_t power_write_file(struct p
+ 	power = (u8)(lpower & 0xff);
+ 	dbg("power = %d\n", power);
+ 
+-	if (!try_module_get(slot->owner)) {
+-		retval = -ENODEV;
+-		goto exit;
+-	}
+ 	switch (power) {
+ 	case 0:
+ 		if (slot->ops->disable_slot)
+@@ -102,9 +95,7 @@ static ssize_t power_write_file(struct p
+ 		err("Illegal value specified for power\n");
+ 		retval = -EINVAL;
+ 	}
+-	module_put(slot->owner);
+ 
+-exit:
+ 	if (retval)
+ 		return retval;
+ 	return count;
+@@ -141,15 +132,9 @@ static ssize_t attention_write_file(stru
+ 	attention = (u8)(lattention & 0xff);
+ 	dbg(" - attention = %d\n", attention);
+ 
+-	if (!try_module_get(slot->owner)) {
+-		retval = -ENODEV;
+-		goto exit;
+-	}
+ 	if (ops->set_attention_status)
+ 		retval = ops->set_attention_status(slot, attention);
+-	module_put(slot->owner);
+ 
+-exit:
+ 	if (retval)
+ 		return retval;
+ 	return count;
+@@ -207,15 +192,9 @@ static ssize_t test_write_file(struct pc
+ 	test = (u32)(ltest & 0xffffffff);
+ 	dbg("test = %d\n", test);
+ 
+-	if (!try_module_get(slot->owner)) {
+-		retval = -ENODEV;
+-		goto exit;
+-	}
+ 	if (slot->ops->hardware_test)
+ 		retval = slot->ops->hardware_test(slot, test);
+-	module_put(slot->owner);
+ 
+-exit:
+ 	if (retval)
+ 		return retval;
+ 	return count;

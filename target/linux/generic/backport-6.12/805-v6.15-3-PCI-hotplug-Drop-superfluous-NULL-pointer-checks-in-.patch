@@ -1,0 +1,111 @@
+From 17e39a332f538e0dbdb48ea4299015c2d9174777 Mon Sep 17 00:00:00 2001
+From: Lukas Wunner <lukas@wunner.de>
+Date: Tue, 25 Feb 2025 18:06:03 +0100
+Subject: [PATCH 3/5] PCI: hotplug: Drop superfluous NULL pointer checks in
+ has_*_file()
+
+The PCI hotplug core contains five has_*_file() functions to determine
+whether a certain sysfs file shall be added (or removed) for a given
+hotplug slot.
+
+The functions perform NULL pointer checks for the hotplug_slot and its
+hotplug_slot_ops.  However the callers already perform these checks:
+
+  pci_hp_register()
+    __pci_hp_register()
+      __pci_hp_initialize()
+
+  pci_hp_deregister()
+    pci_hp_del()
+
+The only way to actually trigger these checks is to call pci_hp_add()
+without having called pci_hp_initialize().
+
+Amend pci_hp_add() to catch that and drop the now superfluous NULL
+pointer checks in has_*_file().
+
+Drop the same superfluous checks from pci_hp_create_module_link(),
+which is (only) called from pci_hp_add().
+
+Link: https://lore.kernel.org/r/37d1928edf8c3201a8b10794f1db3142e16e02b9.1740501868.git.lukas@wunner.de
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/hotplug/pci_hotplug_core.c | 17 ++++++-----------
+ drivers/pci/slot.c                     |  2 --
+ 2 files changed, 6 insertions(+), 13 deletions(-)
+
+--- a/drivers/pci/hotplug/pci_hotplug_core.c
++++ b/drivers/pci/hotplug/pci_hotplug_core.c
+@@ -209,8 +209,6 @@ static bool has_power_file(struct pci_sl
+ {
+ 	struct hotplug_slot *slot = pci_slot->hotplug;
+ 
+-	if ((!slot) || (!slot->ops))
+-		return false;
+ 	if ((slot->ops->enable_slot) ||
+ 	    (slot->ops->disable_slot) ||
+ 	    (slot->ops->get_power_status))
+@@ -222,8 +220,6 @@ static bool has_attention_file(struct pc
+ {
+ 	struct hotplug_slot *slot = pci_slot->hotplug;
+ 
+-	if ((!slot) || (!slot->ops))
+-		return false;
+ 	if ((slot->ops->set_attention_status) ||
+ 	    (slot->ops->get_attention_status))
+ 		return true;
+@@ -234,8 +230,6 @@ static bool has_latch_file(struct pci_sl
+ {
+ 	struct hotplug_slot *slot = pci_slot->hotplug;
+ 
+-	if ((!slot) || (!slot->ops))
+-		return false;
+ 	if (slot->ops->get_latch_status)
+ 		return true;
+ 	return false;
+@@ -245,8 +239,6 @@ static bool has_adapter_file(struct pci_
+ {
+ 	struct hotplug_slot *slot = pci_slot->hotplug;
+ 
+-	if ((!slot) || (!slot->ops))
+-		return false;
+ 	if (slot->ops->get_adapter_status)
+ 		return true;
+ 	return false;
+@@ -256,8 +248,6 @@ static bool has_test_file(struct pci_slo
+ {
+ 	struct hotplug_slot *slot = pci_slot->hotplug;
+ 
+-	if ((!slot) || (!slot->ops))
+-		return false;
+ 	if (slot->ops->hardware_test)
+ 		return true;
+ 	return false;
+@@ -439,9 +429,14 @@ EXPORT_SYMBOL_GPL(__pci_hp_initialize);
+  */
+ int pci_hp_add(struct hotplug_slot *slot)
+ {
+-	struct pci_slot *pci_slot = slot->pci_slot;
++	struct pci_slot *pci_slot;
+ 	int result;
+ 
++	if (WARN_ON(!slot))
++		return -EINVAL;
++
++	pci_slot = slot->pci_slot;
++
+ 	result = fs_add_slot(pci_slot);
+ 	if (result)
+ 		return result;
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -338,8 +338,6 @@ void pci_hp_create_module_link(struct pc
+ 	struct kobject *kobj = NULL;
+ 	int ret;
+ 
+-	if (!slot || !slot->ops)
+-		return;
+ 	kobj = kset_find_obj(module_kset, slot->mod_name);
+ 	if (!kobj)
+ 		return;
