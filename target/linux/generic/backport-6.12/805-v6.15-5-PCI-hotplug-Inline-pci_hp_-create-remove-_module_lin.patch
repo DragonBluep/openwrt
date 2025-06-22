@@ -1,0 +1,132 @@
+From 4fa4772fbb88fb1f4fdb24b9c742c132ca2483aa Mon Sep 17 00:00:00 2001
+From: Lukas Wunner <lukas@wunner.de>
+Date: Tue, 25 Feb 2025 18:06:05 +0100
+Subject: [PATCH 5/5] PCI: hotplug: Inline pci_hp_{create,remove}_module_link()
+
+For no apparent reason, the pci_hp_{create,remove}_module_link() helpers
+live in slot.c, even though they're only called from two functions in
+pci_hotplug_core.c.
+
+Inline the helpers to reduce code size and number of exported symbols.
+
+Link: https://lore.kernel.org/r/c207f03cfe32ae9002d9b453001a1dd63d9ab3fb.1740501868.git.lukas@wunner.de
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/hotplug/pci_hotplug_core.c | 14 +++++++--
+ drivers/pci/slot.c                     | 42 --------------------------
+ include/linux/pci.h                    |  5 ---
+ 3 files changed, 11 insertions(+), 50 deletions(-)
+
+--- a/drivers/pci/hotplug/pci_hotplug_core.c
++++ b/drivers/pci/hotplug/pci_hotplug_core.c
+@@ -245,10 +245,18 @@ static bool has_test_file(struct hotplug
+ 
+ static int fs_add_slot(struct hotplug_slot *slot, struct pci_slot *pci_slot)
+ {
++	struct kobject *kobj;
+ 	int retval = 0;
+ 
+ 	/* Create symbolic link to the hotplug driver module */
+-	pci_hp_create_module_link(pci_slot);
++	kobj = kset_find_obj(module_kset, slot->mod_name);
++	if (kobj) {
++		retval = sysfs_create_link(&pci_slot->kobj, kobj, "module");
++		if (retval)
++			dev_err(&pci_slot->bus->dev,
++				"Error creating sysfs link (%d)\n", retval);
++		kobject_put(kobj);
++	}
+ 
+ 	if (has_power_file(slot)) {
+ 		retval = sysfs_create_file(&pci_slot->kobj,
+@@ -302,7 +310,7 @@ exit_attention:
+ 	if (has_power_file(slot))
+ 		sysfs_remove_file(&pci_slot->kobj, &hotplug_slot_attr_power.attr);
+ exit_power:
+-	pci_hp_remove_module_link(pci_slot);
++	sysfs_remove_link(&pci_slot->kobj, "module");
+ exit:
+ 	return retval;
+ }
+@@ -326,7 +334,7 @@ static void fs_remove_slot(struct hotplu
+ 	if (has_test_file(slot))
+ 		sysfs_remove_file(&pci_slot->kobj, &hotplug_slot_attr_test.attr);
+ 
+-	pci_hp_remove_module_link(pci_slot);
++	sysfs_remove_link(&pci_slot->kobj, "module");
+ }
+ 
+ /**
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -7,7 +7,6 @@
+ 
+ #include <linux/kobject.h>
+ #include <linux/slab.h>
+-#include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/err.h>
+ #include "pci.h"
+@@ -323,47 +322,6 @@ void pci_destroy_slot(struct pci_slot *s
+ }
+ EXPORT_SYMBOL_GPL(pci_destroy_slot);
+ 
+-#if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
+-#include <linux/pci_hotplug.h>
+-/**
+- * pci_hp_create_module_link - create symbolic link to hotplug driver module
+- * @pci_slot: struct pci_slot
+- *
+- * Helper function for pci_hotplug_core.c to create symbolic link to
+- * the hotplug driver module.
+- */
+-void pci_hp_create_module_link(struct pci_slot *pci_slot)
+-{
+-	struct hotplug_slot *slot = pci_slot->hotplug;
+-	struct kobject *kobj = NULL;
+-	int ret;
+-
+-	kobj = kset_find_obj(module_kset, slot->mod_name);
+-	if (!kobj)
+-		return;
+-	ret = sysfs_create_link(&pci_slot->kobj, kobj, "module");
+-	if (ret)
+-		dev_err(&pci_slot->bus->dev, "Error creating sysfs link (%d)\n",
+-			ret);
+-	kobject_put(kobj);
+-}
+-EXPORT_SYMBOL_GPL(pci_hp_create_module_link);
+-
+-/**
+- * pci_hp_remove_module_link - remove symbolic link to the hotplug driver
+- * 	module.
+- * @pci_slot: struct pci_slot
+- *
+- * Helper function for pci_hotplug_core.c to remove symbolic link to
+- * the hotplug driver module.
+- */
+-void pci_hp_remove_module_link(struct pci_slot *pci_slot)
+-{
+-	sysfs_remove_link(&pci_slot->kobj, "module");
+-}
+-EXPORT_SYMBOL_GPL(pci_hp_remove_module_link);
+-#endif
+-
+ static int pci_slot_init(void)
+ {
+ 	struct kset *pci_bus_kset;
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2430,11 +2430,6 @@ static inline resource_size_t pci_iov_re
+ static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
+ #endif
+ 
+-#if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
+-void pci_hp_create_module_link(struct pci_slot *pci_slot);
+-void pci_hp_remove_module_link(struct pci_slot *pci_slot);
+-#endif
+-
+ /**
+  * pci_pcie_cap - get the saved PCIe capability offset
+  * @dev: PCI device
