@@ -117,6 +117,12 @@ define Build/mstc-header
   mv $@.new $@
 endef
 
+define Build/single-part-gpt
+	ptgen -g -o $@.tmp -a 1 -l 1024 \
+		-t 0x2e -N $(if $(1),$(1),fit) -p $(CONFIG_TARGET_ROOTFS_PARTSIZE)M@1M
+	mv $@.tmp $@
+endef
+
 define Build/zyxel-nwa-fit-filogic
 	$(TOPDIR)/scripts/mkits-zyxel-fit-filogic.sh \
 		$@.its $@ "80 e1 81 e1 ff ff ff ff ff ff"
@@ -347,6 +353,31 @@ $(call Device/adtran_smartrg)
   DEVICE_PACKAGES += kmod-mt7996-firmware kmod-phy-aquantia kmod-sfp kmod-usb3 mt7988-wo-firmware
 endef
 TARGET_DEVICES += smartrg_sdg-8734
+
+define Device/airopi_ax3
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_DTS := mt7981b-airopi-ax3
+  DEVICE_DTS_OVERLAY := mt7981b-airopi-ax3-sdcard
+  DEVICE_DTC_FLAGS := --pad 4096
+  DEVICE_VENDOR := AiroPi
+  DEVICE_MODEL := AX3
+  DEVICE_PACKAGES := e2fsprogs fitblk f2fsck mkf2fs mt7981-wo-firmware \
+	kmod-hwmon-pwmfan kmod-mt7915e kmod-mt7981-firmware kmod-usb3
+  IMAGE_SIZE := $$(CONFIG_TARGET_ROOTFS_PARTSIZE)m
+  IMAGES := sysupgrade.itb
+  KERNEL := kernel-bin | lzma
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.itb := append-kernel | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | \
+	pad-rootfs | append-metadata
+  ARTIFACTS := preloader.bin bl31-uboot.fip sdcard.img.gz
+  ARTIFACT/preloader.bin := mt7981-bl2 nor-ddr4
+  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot airopi_ax3
+  ARTIFACT/sdcard.img.gz := single-part-gpt | pad-to 1M | \
+	append-image squashfs-sysupgrade.itb | pad-to 512 | check-size | gzip
+endef
+TARGET_DEVICES += airopi_ax3
 
 define Device/airpi_ap3000m
   DEVICE_VENDOR := Airpi

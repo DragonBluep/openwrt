@@ -65,6 +65,9 @@ huasifei,wh3000|\
 nradio,c8-668gl)
 	ubootenv_add_mmc "u-boot-env" "" "0x0" "0x80000"
 	;;
+airopi,ax3)
+	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x10000" "0x10000"
+	;;
 asiarf,ap7986-003|\
 cetron,ct3003|\
 comfast,cf-wr632ax|\
