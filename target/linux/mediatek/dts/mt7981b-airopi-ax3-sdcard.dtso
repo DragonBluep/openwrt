@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+/dts-v1/;
+/plugin/;
+
+&{/chosen} {
+	rootdisk = <&fit>;
+};
+
+&{/soc/mmc@11230000} {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	card@0 {
+		compatible = "mmc-card";
+		reg = <0>;
+
+		partitions {
+			compatible = "gpt-partitions";
+
+			fit: block-partition-fit {
+				partname = "fit";
+			};
+		};
+	};
+};

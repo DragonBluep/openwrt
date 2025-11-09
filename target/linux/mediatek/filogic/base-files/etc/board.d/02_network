@@ -128,6 +128,7 @@ mediatek_setup_interfaces()
 	huasifei,wh3000-pro)
 		ucidef_set_interfaces_lan_wan eth0 eth1
 		;;
+	airopi,ax3|\
 	bazis,ax3000wm|\
 	cudy,m3000-v1|\
 	cudy,tr3000-256mb-v1|\
@@ -139,7 +140,8 @@ mediatek_setup_interfaces()
 	glinet,gl-x3000|\
 	glinet,gl-xe3000|\
 	openembed,som7981|\
-	openwrt,one)
+	openwrt,one|\
+	peanutpi,r3s-mini)
 		ucidef_set_interfaces_lan_wan eth1 eth0
 		;;
 	dlink,aquila-pro-ai-m30-a1|\
