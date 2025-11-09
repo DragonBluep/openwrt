@@ -339,6 +339,31 @@ $(call Device/adtran_smartrg)
 endef
 TARGET_DEVICES += smartrg_sdg-8734
 
+define Device/airopi_ax3
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_DTS := mt7981b_airopi_ax3
+  DEVICE_DTS_CONFIG := config-mt7981b_airopi_ax3
+  DEVICE_DTS_OVERLAY := mt7981b_airopi_ax3-sd
+  DEVICE_DTC_FLAGS := --pad 4096
+  DEVICE_VENDOR := AiroPi
+  DEVICE_MODEL := AX3
+  DEVICE_PACKAGES := e2fsprogs fitblk f2fsck mkf2fs \
+	kmod-mt7915e kmod-mt7981-firmware kmod-usb3 mt7981-wo-firmware
+  IMAGE_SIZE := $$(CONFIG_TARGET_ROOTFS_PARTSIZE)m
+  IMAGES := sysupgrade.itb
+  KERNEL := kernel-bin | lzma
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.itb := append-kernel | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | \
+	pad-rootfs | append-metadata
+  ARTIFACTS := preloader.bin bl31-uboot.fip sdcard.img.gz
+  ARTIFACT/preloader.bin := mt7981-bl2 nor-ddr4
+  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot airopi_ax3
+  ARTIFACT/sdcard.img.gz := simplefit | append-image squashfs-sysupgrade.itb | check-size | gzip
+endef
+TARGET_DEVICES += airopi_ax3
+
 define Device/arcadyan_mozart
   DEVICE_VENDOR := Arcadyan
   DEVICE_MODEL := Mozart
