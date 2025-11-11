@@ -1,0 +1,656 @@
+From 9b8856a707e0822c6af5c513e7612d578aa0047d Mon Sep 17 00:00:00 2001
+From: Shiji Yang <yangshiji66@outlook.com>
+Date: Sun, 9 Nov 2025 12:01:30 +0800
+Subject: [PATCH 2/2] arm: mediatek: add support for AiroPi AX3
+
+Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
+---
+ arch/arm/dts/mt7981_airopi_ax3.dts  | 450 ++++++++++++++++++++++++++++
+ configs/mt7981_airopi_ax3_defconfig | 136 +++++++++
+ defenvs/airopi_ax3.env              |  46 +++
+ 3 files changed, 632 insertions(+)
+ create mode 100644 arch/arm/dts/mt7981_airopi_ax3.dts
+ create mode 100644 configs/mt7981_airopi_ax3_defconfig
+ create mode 100644 defenvs/airopi_ax3.env
+
+--- /dev/null
++++ b/arch/arm/dts/mt7981_airopi_ax3.dts
+@@ -0,0 +1,450 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/mt65xx.h>
++
++#include "mt7981.dtsi"
++
++/ {
++	compatible = "airopi,ax3", "mediatek,mt7981";
++	model = "AiroPi AX3";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++		tick-timer = &timer0;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&keys_pins>;
++
++		button-reset {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_pins>;
++
++		led-status {
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_STATUS;
++			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++
++		led-wlan0 {
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_WLAN_2GHZ;
++			gpios = <&pio 34 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		led-wlan1 {
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_WLAN_5GHZ;
++			gpios = <&pio 35 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++	};
++
++	memory@40000000 {
++		reg = <0x40000000 0x40000000>;
++		device_type = "memory";
++	};
++
++	options {
++		u-boot {
++			compatible = "u-boot,config";
++			boot-btn1 = "reset";
++			boot-led1 = "blue:status";
++			bootcmd_1-1 = "tftp_boot_ik";
++			bootcmd_1-2 = "tftp_update_fw";
++			bootcmd_1-3 = "switch_bootdev";
++			bootcmd_1-4 = "env init";
++		};
++	};
++
++	regulator-fan {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&fan_power_pins>;
++		regulator-boot-on;
++		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "fan_power";
++	};
++
++	/* broken regulator, wrong voltage */
++	reg_vbus: regulator-vbus {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpios = <&pio 14 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_vbus_pins>;
++		regulator-boot-on;
++		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "usb_vbus";
++	};
++
++	reg_vmmc: regulator-vmmc {
++		compatible = "regulator-fixed";
++		regulator-always-on;
++		regulator-max-microvolt = <3300000>;
++		regulator-min-microvolt = <3300000>;
++		regulator-name = "mmc_power";
++	};
++
++	reg_vqmmc: regulator-vqmmc {
++		compatible = "regulator-fixed";
++		regulator-always-on;
++		regulator-max-microvolt = <3300000>;
++		regulator-min-microvolt = <3300000>;
++		regulator-name = "mmc_io";
++	};
++
++	reg_vusb33: regulator-vusb33 {
++		compatible = "regulator-fixed";
++		regulator-always-on;
++		regulator-max-microvolt = <3300000>;
++		regulator-min-microvolt = <3300000>;
++		regulator-name = "usb_io";
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		ramoops@42ff0000 {
++			compatible = "ramoops";
++			reg = <0x42ff0000 0x00010000>;
++			console-size = <0x8000>;
++			record-size = <0x2000>;
++		};
++
++		secmon@43000000 {
++			reg = <0x43000000 0x00030000>;
++			no-map;
++		};
++	};
++};
++
++&eth {
++	mediatek,gmac-id = <1>;
++	phy-mode = "gmii";
++	phy-handle = <&ethphy0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&ephy_2p5g_pins>, <&gbe_leds_pins>, <&mdio_pins>;
++	status = "okay";
++
++	ethphy0: ethernet-phy@0 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		phy-mode = "gmii";
++	};
++};
++
++&mmc0 {
++	assigned-clock-parents = <&topckgen CLK_TOP_CB_NET2_D4>,
++				 <&topckgen CLK_TOP_CB_NET2_D2>;
++	broken-cd;
++	bus-width = <4>;
++	cap-sd-highspeed;
++	disable-wp;
++	max-frequency = <50000000>;
++	no-1-8-v;
++	no-mmc;
++	no-sdio;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc_pins>;
++	vmmc-supply = <&reg_vmmc>;
++	vqmmc-supply = <&reg_vqmmc>;
++	status = "okay";
++};
++
++&pio {
++	ephy_2p5g_pins: ephy-2p5g-pins {
++		conf-int {
++			bias-disable;
++			input-enable;
++			input-schmitt-enable;
++			drive-strength = <MTK_DRIVE_2mA>;
++			pins = "GBE_INT";
++		};
++
++		conf-rst {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "GBE_RESET";
++		};
++	};
++
++	fan_power_pins: fan-power-pins {
++		conf {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			pins = "JTAG_JTDI";
++		};
++	};
++
++	fan_tach_pins: fan-tach-pins {
++		conf {
++			input-enable;
++			input-schmitt-enable;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
++			drive-strength = <MTK_DRIVE_2mA>;
++			pins = "WO_JTAG_JTMS";
++		};
++	};
++
++	gbe_leds_pins: gbe-leds-pins {
++		mux {
++			function = "led";
++			groups = "gbe_led0", "gbe_led1";
++		};
++
++		conf {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "JTAG_JTRST_N", "WO_JTAG_JTRST_N";
++		};
++	};
++
++	keys_pins: keys-pins {
++		conf {
++			bias-disable;
++			input-enable;
++			input-schmitt-enable;
++			drive-strength = <MTK_DRIVE_2mA>;
++			pins = "GPIO_RESET";
++		};
++	};
++
++	leds_pins: leds-pins {
++		conf {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "WO_JTAG_JTDO", "PCIE_CLK_REQ", "PCIE_WAKE_N";
++		};
++	};
++
++	mdio_pins: mdc-mdio-pins {
++		mux {
++			function = "eth";
++			groups = "smi_mdc_mdio";
++		};
++
++		conf-clk {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "SMI_MDC";
++		};
++
++		conf-io {
++			bias-disable;
++			input-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "SMI_MDIO";
++		};
++	};
++
++	mmc_pins: mmc-pins {
++		mux {
++			function = "flash";
++			groups = "emmc_4";
++		};
++
++		conf-cmd-dat {
++			input-enable;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "SPI0_CLK", "SPI0_MOSI", "SPI0_MISO",
++			       "SPI0_CS", "SPI1_MISO";
++		};
++
++		conf-clk {
++			output-enable;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			pins = "SPI1_CS";
++		};
++	};
++
++	pwm2_pins: pwm2-pins {
++		mux {
++			function = "pwm";
++			groups = "pwm2";
++		};
++
++		conf {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			pins = "JTAG_JTCLK";
++		};
++	};
++
++	spi2_pins: spi2-pins {
++		mux {
++			function = "spi";
++			groups = "spi2", "spi2_wp_hold";
++		};
++
++		conf-clk-cs {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "SPI2_CLK", "SPI2_CS";
++		};
++
++		conf-dat {
++			bias-disable;
++			input-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "SPI2_MOSI", "SPI2_MISO", "SPI2_HOLD", "SPI2_WP";
++		};
++	};
++
++	uart0_pins: uart0-pins {
++		mux {
++			function = "uart";
++			groups = "uart0";
++		};
++
++		conf-rx {
++			bias-disable;
++			input-enable;
++			input-schmitt-enable;
++			drive-strength = <MTK_DRIVE_2mA>;
++			pins = "UART0_RXD";
++		};
++
++		conf-tx {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_4mA>;
++			pins = "UART0_TXD";
++		};
++	};
++
++	usb_vbus_pins: usb-vbus-pins {
++		conf {
++			bias-disable;
++			output-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			pins = "USB_VBUS";
++		};
++	};
++
++	fan-tach {
++		gpio-hog;
++		gpios = <11 GPIO_ACTIVE_HIGH>;
++		input;
++	};
++
++	rtl8221b-int {
++		gpio-hog;
++		gpios = <38 GPIO_ACTIVE_LOW>;
++		input;
++	};
++
++	rtl8221b-rst {
++		gpio-hog;
++		gpios = <39 GPIO_ACTIVE_LOW>;
++		output-low;
++	};
++};
++
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&fan_tach_pins>, <&pwm2_pins>;
++	status = "okay";
++};
++
++&spi2 {
++	compatible = "mediatek,spi-ipm";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	clocks = <&topckgen CLK_TOP_CB_M_D2>,
++		 <&topckgen CLK_TOP_SPI_SEL>,
++		 <&infracfg CLK_INFRA_SPI2_CK>,
++		 <&infracfg CLK_INFRA_SPI2_HCK_CK>;
++	clock-names = "parent-clk", "sel-clk", "spi-clk", "hclk";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2_pins>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		m25p,fast-read;
++		spi-max-frequency = <52000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "bl2";
++				reg = <0x000000 0x040000>;
++			};
++
++			partition@40000 {
++				label = "u-boot-env";
++				reg = <0x040000 0x010000>;
++			};
++
++			partition@50000 {
++				label = "factory";
++				reg = <0x050000 0x0b0000>;
++			};
++
++			partition@100000 {
++				label = "fip";
++				reg = <0x100000 0x080000>;
++			};
++
++			partition@180000 {
++				label = "firmware";
++				reg = <0x180000 0x000000>;
++			};
++		};
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
++	status = "okay";
++};
++
++&xhci {
++	/delete-property/ mediatek,u3p-dis-msk;
++	vbus-supply = <&reg_vbus>;
++	vusb33-supply = <&reg_vusb33>;
++};
+--- /dev/null
++++ b/configs/mt7981_airopi_ax3_defconfig
+@@ -0,0 +1,136 @@
++CONFIG_ARM=y
++CONFIG_SYS_HAS_NONCACHED_MEMORY=y
++CONFIG_POSITION_INDEPENDENT=y
++CONFIG_ARCH_MEDIATEK=y
++CONFIG_TEXT_BASE=0x41e00000
++CONFIG_SYS_MALLOC_F_LEN=0x4000
++CONFIG_NR_DRAM_BANKS=1
++CONFIG_ENV_SIZE=0x10000
++CONFIG_ENV_OFFSET=0x0
++CONFIG_DEFAULT_DEVICE_TREE="mt7981_airopi_ax3"
++CONFIG_OF_LIBFDT_OVERLAY=y
++CONFIG_TARGET_MT7981=y
++CONFIG_SYS_LOAD_ADDR=0x50000000
++CONFIG_DEBUG_UART_BASE=0x11002000
++CONFIG_DEBUG_UART_CLOCK=40000000
++CONFIG_DEBUG_UART=y
++# CONFIG_LOCALVERSION_AUTO is not set
++# CONFIG_EFI_LOADER is not set
++CONFIG_TIMESTAMP=y
++CONFIG_BUTTON_BOOTSTRAP=y
++CONFIG_FIT=y
++# CONFIG_BOOTSTD is not set
++CONFIG_BOOTDELAY=1
++CONFIG_AUTOBOOT_MENU_SHOW=y
++# CONFIG_BOARD_INIT is not set
++CONFIG_SYS_MALLOC_BOOTPARAMS=y
++CONFIG_HUSH_PARSER=y
++CONFIG_CMD_BDINFO_EXTRA=y
++CONFIG_CMD_HISTORY=y
++CONFIG_CMD_BOOTZ=y
++# CONFIG_BOOTM_NETBSD is not set
++CONFIG_CMD_BOOTMENU=y
++CONFIG_CMD_ASKENV=y
++CONFIG_CMD_GREPENV=y
++CONFIG_CMD_ERASEENV=y
++CONFIG_CMD_ENV_CALLBACK=y
++CONFIG_CMD_ENV_FLAGS=y
++CONFIG_CMD_NVEDIT_INDIRECT=y
++CONFIG_CMD_NVEDIT_INFO=y
++CONFIG_CMD_BINOP=y
++CONFIG_CRC32_VERIFY=y
++CONFIG_CMD_MD5SUM=y
++CONFIG_MD5SUM_VERIFY=y
++CONFIG_CMD_MEMINFO=y
++CONFIG_CMD_MEMINFO_MAP=y
++CONFIG_CMD_MEM_SEARCH=y
++CONFIG_CMD_SHA1SUM=y
++CONFIG_SHA1SUM_VERIFY=y
++CONFIG_CMD_STRINGS=y
++CONFIG_CMD_GPIO=y
++CONFIG_CMD_GPIO_READ=y
++CONFIG_CMD_PWM=y
++CONFIG_CMD_GPT=y
++CONFIG_CMD_GPT_RENAME=y
++CONFIG_CMD_LSBLK=y
++CONFIG_CMD_MMC=y
++CONFIG_CMD_BKOPS_ENABLE=y
++CONFIG_CMD_MMC_REG=y
++CONFIG_MMC_SPEED_MODE_SET=y
++CONFIG_CMD_MTD=y
++CONFIG_CMD_PART=y
++CONFIG_CMD_READ=y
++CONFIG_CMD_USB=y
++CONFIG_CMD_WRITE=y
++CONFIG_CMD_SETEXPR_FMT=y
++CONFIG_CMD_TFTPPUT=y
++CONFIG_CMD_TFTPSRV=y
++CONFIG_CMD_DHCP=y
++CONFIG_CMD_PING=y
++CONFIG_CMD_WGET=y
++CONFIG_CMD_CLS=y
++CONFIG_CMD_PAUSE=y
++CONFIG_CMD_PSTORE=y
++CONFIG_CMD_PSTORE_MEM_ADDR=0x42ff0000
++CONFIG_CMD_PSTORE_RECORD_SIZE=0x2000
++CONFIG_CMD_PSTORE_CONSOLE_SIZE=0x8000
++CONFIG_CMD_PSTORE_FTRACE_SIZE=0x0
++CONFIG_CMD_PSTORE_PMSG_SIZE=0x0
++CONFIG_CMD_REGULATOR=y
++CONFIG_CMD_HASH=y
++CONFIG_HASH_VERIFY=y
++CONFIG_PARTITION_TYPE_GUID=y
++CONFIG_ENV_OVERWRITE=y
++CONFIG_ENV_IS_IN_MTD=y
++CONFIG_ENV_RELOC_GD_ENV_ADDR=y
++CONFIG_ENV_MTD_DEV="u-boot-env"
++CONFIG_ENV_USE_DEFAULT_ENV_TEXT_FILE=y
++CONFIG_ENV_DEFAULT_ENV_TEXT_FILE="defenvs/airopi_ax3.env"
++CONFIG_NETCONSOLE=y
++CONFIG_NET_RANDOM_ETHADDR=y
++CONFIG_BUTTON_GPIO=y
++CONFIG_CLK=y
++CONFIG_GPIO_HOG=y
++CONFIG_LED_GPIO=y
++CONFIG_MMC_BROKEN_CD=y
++CONFIG_MMC_MTK=y
++CONFIG_MTD=y
++CONFIG_DM_MTD=y
++CONFIG_DM_SPI_FLASH=y
++CONFIG_SPI_FLASH_SFDP_SUPPORT=y
++CONFIG_SPI_FLASH_BOYAMICRO=y
++CONFIG_SPI_FLASH_EON=y
++CONFIG_SPI_FLASH_GIGADEVICE=y
++CONFIG_SPI_FLASH_MACRONIX=y
++CONFIG_SPI_FLASH_WINBOND=y
++CONFIG_SPI_FLASH_XMC=y
++# CONFIG_SPI_FLASH_USE_4K_SECTORS is not set
++CONFIG_SPI_FLASH_MTD=y
++CONFIG_MEDIATEK_ETH=y
++# CONFIG_MTK_ETH_SWITCH_MT7531 is not set
++# CONFIG_MTK_ETH_SWITCH_AN8855 is not set
++CONFIG_PHY=y
++CONFIG_PHY_MTK_TPHY=y
++CONFIG_PINCTRL=y
++CONFIG_PINCONF=y
++CONFIG_PINCTRL_MT7981=y
++CONFIG_DM_REGULATOR=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_PWM=y
++CONFIG_PWM_MTK=y
++CONFIG_DM_SERIAL=y
++CONFIG_SERIAL_RX_BUFFER=y
++CONFIG_MTK_SERIAL=y
++CONFIG_SPI=y
++CONFIG_DM_SPI=y
++CONFIG_MTK_SPIM=y
++CONFIG_USB=y
++CONFIG_USB_XHCI_HCD=y
++CONFIG_USB_XHCI_MTK=y
++CONFIG_USB_STORAGE=y
++CONFIG_LZO=y
++CONFIG_BZIP2=y
++CONFIG_ZSTD=y
++CONFIG_HEXDUMP=y
++# CONFIG_TOOLS_LIBCRYPTO is not set
++# CONFIG_TOOLS_KWBIMAGE is not set
+--- /dev/null
++++ b/defenvs/airopi_ax3.env
+@@ -0,0 +1,46 @@
++bootdev=nor
++baudrate=115200
++loadaddr=50000000
++ipaddr=192.168.1.1
++serverip=192.168.1.254
++ethaddr=aa:bb:cc:dd:ee:ff
++file_bl2=preloader.bin
++file_fip=bl31-uboot.fip
++file_fw=firmware.itb
++file_ik=initramfs-kernel.bin
++file_img=sdcard.img
++bootargs=root=/dev/fit0 rootwait
++bootcmd=test x$bootdev = xmmc && run mmc_read_fw && bootm $loadaddr$bootconf_mmc; run nor_read_fw && bootm $loadaddr
++bootconf_mmc=#config-1#mt7981b-airopi-ax3-sdcard
++bootmenu_0=[36m[1mExec default boot command[0m=run bootcmd; echo [31m[1mBoot failed![0m; sleep 3; reset
++bootmenu_1=[36m[1mBoot system from Flash[0m=run bootcmd; echo [31m[1mBoot failed![0m; pause; bootmenu 60
++bootmenu_2=[32m[1mLoad initramfs image via TFTP then boot[0m=run tftp_boot_ik; pause; bootmenu 60
++bootmenu_3=[32m[1mLoad system via TFTP then write to Flash[0m=run tftp_update_fw; pause; bootmenu 60
++bootmenu_4=[33m[1mLoad BL2 via TFTP then write to Flash[0m=run tftp_update_bl2; pause; bootmenu 60
++bootmenu_5=[33m[1mLoad FIP via TFTP then write to Flash[0m=run tftp_update_fip; pause; bootmenu 60
++bootmenu_6=[34m[1mSwitch boot device[0m=run switch_bootdev; pause; bootmenu 60
++bootmenu_7=[35m[1mReboot[0m=reset
++check_bl2_integrity=if run md5_verify_bl2; then echo [31m[1mBL2 upgrade successful![0m; else echo [31m[1mBL2 upgrade failed![0m; fi
++check_fip_integrity=if run md5_verify_fip; then echo [31m[1mFIP upgrade successful![0m; else echo [31m[1mFIP upgrade failed![0m; fi
++continue_or_not=askenv token [31m[1mContinue? [Y/n][0m 1 && char=$token && setenv token; test x$char = xy || test x$char = xY
++initcmd=run set_macaddr && setenv set_macaddr && setenv initcmd
++md5_verify_bl2=md5sum $loadaddr $filesize sum && hash=$sum && setenv sum && mtd read bl2 $loadaddr && md5sum -v $loadaddr $filesize $hash
++md5_verify_fip=md5sum $loadaddr $filesize sum && hash=$sum && setenv sum && mtd read fip $loadaddr && md5sum -v $loadaddr $filesize $hash
++mmc_prep_write=setexpr ioblks $filesize + 1ff && setexpr ioblks $ioblks / 200
++mmc_read_fw=run mmc_seek_fit && mmc read $loadaddr $fitaddr 100 && imszb $loadaddr ioblks && mmc read $loadaddr $fitaddr $ioblks && setenv ioblks
++mmc_seek_fit=part start mmc 0 fit voladdr && fitaddr=$voladdr && setenv voladdr
++mmc_write_fw=run mmc_seek_fit && run mmc_prep_write && mmc write $loadaddr $fitaddr $ioblks && setenv ioblks
++nor_prep_erase=setexpr iosize $filesize + ffff && setexpr iosize $iosize / 10000 && setexpr iosize $iosize * 10000
++nor_read_fw=mtd read firmware $loadaddr 0 10000 && imsz $loadaddr iosize && mtd read firmware $loadaddr 0 $iosize && setenv iosize
++nor_write_fw=run nor_prep_erase && mtd erase firmware 0 $iosize && setenv iosize && mtd write firmware $loadaddr 0 $filesize
++set_macaddr=mw.l $loadaddr 00430c00 && setexpr ptr $loadaddr + 3 && cp.b 11f20140 $ptr 3 && setenv ptr && readmem -b ethaddr $loadaddr
++setup_netcon=setenv ncip $serverip && setenv stdin nc && setenv stdout nc && setenv stderr nc
++setup_uartcon=setenv stderr serial@11002000 && setenv stdout serial@11002000 && setenv stdin serial@11002000 && setenv ncip
++switch_bootdev=if test x$bootdev = xmmc; then setenv bootdev nor && echo [31m[1mNOR selected![0m; else setenv bootdev mmc && echo [31m[1mMMC selected![0m; fi && saveenv
++switch_console=if test x$stdin = xnc; then run setup_uartcon && setenv bootdelay; else run setup_netcon && setenv bootdelay 60; fi
++tftp_boot_ik=test x$bootdev = xmmc && conf=$bootconf_mmc || conf=; while true; do tftpboot $loadaddr $file_ik && bootm $loadaddr$conf; sleep 3; done
++tftp_update_bl2=tftpboot $loadaddr $file_bl2 && run continue_or_not && mtd erase bl2 && mtd write bl2 $loadaddr 0 $filesize && run check_bl2_integrity
++tftp_update_fip=tftpboot $loadaddr $file_fip && run continue_or_not && mtd erase fip && mtd write fip $loadaddr 0 $filesize && run check_fip_integrity
++tftp_update_fw=while true; do run tftp_write_fw && run bootcmd; run tftp_write_img && run bootcmd; sleep 3; done
++tftp_write_fw=tftpboot $loadaddr $file_fw && if test x$bootdev = xmmc; then run mmc_write_fw; else run nor_write_fw; fi
++tftp_write_img=tftpboot $loadaddr $file_img && run mmc_prep_write && mmc write $loadaddr 0 $ioblks && setenv ioblks
