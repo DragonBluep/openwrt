@@ -21,12 +21,6 @@
 			label = "led:status";
 			gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
 		};
-
-		wifi {
-			label = "led:wifi";
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-			linux,default-trigger = "phy0tpt";
-		};
 	};
 
 	keys {
@@ -114,6 +108,13 @@
 
 	nvmem-cells = <&eeprom_factory_0>;
 	nvmem-cell-names = "eeprom";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };
 
 &uart1 {

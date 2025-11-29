@@ -46,12 +46,6 @@
 	leds {
 		compatible = "gpio-leds";
 
-		wifi {
-			label = "blue:wifi";
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-			linux,default-trigger = "phy0tpt";
-		};
-
 		led_status_blue: led_status_blue {
 			function = LED_FUNCTION_STATUS;
 			color = <LED_COLOR_ID_BLUE>;
@@ -68,7 +62,7 @@
 
 &state_default {
 	gpio {
-		groups = "i2c", "wled_an", "gpio", "wdt";
+		groups = "i2c", "gpio", "wdt";
 		function = "gpio";
 	};
 };
@@ -150,6 +144,13 @@
 
 	nvmem-cells = <&eeprom_factory_0>;
 	nvmem-cell-names = "eeprom";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };
 
 &ethernet {

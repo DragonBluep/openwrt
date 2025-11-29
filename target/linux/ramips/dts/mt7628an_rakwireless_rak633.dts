@@ -8,22 +8,6 @@
 / {
 	compatible = "rakwireless,rak633", "mediatek,mt7628an-soc";
 	model = "Rakwireless RAK633";
-
-	leds {
-		compatible = "gpio-leds";
-
-		wifi {
-			label = "blue:wifi";
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-		};
-	};
-};
-
-&state_default {
-	wled_an {
-		groups = "wled_an";
-		function = "gpio";
-	};
 };
 
 &spi0 {
@@ -110,4 +94,11 @@
 
 	nvmem-cells = <&eeprom_factory_0>;
 	nvmem-cell-names = "eeprom";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };

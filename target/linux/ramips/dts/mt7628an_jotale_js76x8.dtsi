@@ -26,12 +26,6 @@
 			label = "green:system";
 			gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
 		};
-
-		wifi {
-			label = "green:wifi";
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-			linux,default-trigger = "phy0tpt";
-		};
 	};
 
 	keys {
@@ -47,7 +41,7 @@
 
 &state_default {
 	gpio {
-		groups = "refclk", "wdt", "wled_an";
+		groups = "refclk", "wdt";
 		function = "gpio";
 	};
 };
@@ -139,4 +133,11 @@
 
 	nvmem-cells = <&eeprom_factory_0>;
 	nvmem-cell-names = "eeprom";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };

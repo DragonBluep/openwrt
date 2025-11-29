@@ -42,12 +42,6 @@
 			label = "orange:system";
 			gpios = <&gpio 43 GPIO_ACTIVE_LOW>;
 		};
-
-		wlan {
-			function = LED_FUNCTION_WLAN;
-			color = <LED_COLOR_ID_BLUE>;
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-		};
 	};
 };
 
@@ -70,7 +64,7 @@
 
 &state_default {
 	gpio {
-		groups = "p0led_an", "wdt", "wled_an";
+		groups = "p0led_an", "wdt";
 		function = "gpio";
 	};
 
@@ -149,4 +143,11 @@
 
 	nvmem-cells = <&eeprom_factory_0>;
 	nvmem-cell-names = "eeprom";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };

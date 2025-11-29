@@ -23,12 +23,6 @@
 			color = <LED_COLOR_ID_GREEN>;
 			gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
 		};
-
-		wlan {
-			function = LED_FUNCTION_WLAN;
-			color = <LED_COLOR_ID_GREEN>;
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-		};
 	};
 
 	keys {
@@ -44,7 +38,7 @@
 
 &state_default {
 	gpio {
-		groups = "wdt", "refclk", "wled_an";
+		groups = "wdt", "refclk";
 		function = "gpio";
 	};
 };
@@ -59,6 +53,13 @@
 
 	nvmem-cells = <&eeprom_factory_0>;
 	nvmem-cell-names = "eeprom";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };
 
 &spi0 {
