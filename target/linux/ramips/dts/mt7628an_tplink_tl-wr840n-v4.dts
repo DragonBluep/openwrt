@@ -44,12 +44,6 @@
 			gpios = <&gpio 43 GPIO_ACTIVE_LOW>;
 		};
 
-		wlan {
-			function = LED_FUNCTION_WLAN;
-			color = <LED_COLOR_ID_GREEN>;
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-		};
-
 		wps {
 			function = LED_FUNCTION_WPS;
 			color = <LED_COLOR_ID_GREEN>;
@@ -68,7 +62,7 @@
 
 &state_default {
 	gpio {
-		groups = "p0led_an", "p2led_an", "perst", "refclk", "wdt", "wled_an";
+		groups = "p0led_an", "p2led_an", "perst", "refclk", "wdt";
 		function = "gpio";
 	};
 };
@@ -78,6 +72,13 @@
 
 	nvmem-cells = <&eeprom_factory_20000>, <&macaddr_factory_f100 0>;
 	nvmem-cell-names = "eeprom", "mac-address";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };
 
 &ethernet {

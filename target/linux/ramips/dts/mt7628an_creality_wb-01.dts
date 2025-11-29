@@ -31,13 +31,6 @@
 	leds {
 		compatible = "gpio-leds";
 
-		led_wlan2 {
-			function = LED_FUNCTION_WLAN_2GHZ;
-			color = <LED_COLOR_ID_YELLOW>;
-			gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-			linux,default-trigger = "phy0tpt";
-		};
-
 		led_lan {
 			function = LED_FUNCTION_LAN;
 			color = <LED_COLOR_ID_BLUE>;
@@ -122,7 +115,7 @@
 
 &state_default {
 	gpio {
-		groups = "wdt", "p3led_an", "p1led_an", "p0led_an", "wled_an";
+		groups = "wdt", "p3led_an", "p1led_an", "p0led_an";
 		function = "gpio";
 	};
 };
@@ -132,6 +125,13 @@
 
 	nvmem-cells = <&macaddr_factory_4>;
 	nvmem-cell-names = "macaddr";
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+		led-active-low;
+	};
 };
 
 &ethernet {

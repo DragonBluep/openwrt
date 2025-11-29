@@ -365,6 +365,13 @@
 				function = "refclk";
 			};
 		};
+
+		wled_pins: wled {
+			wled {
+				groups = "wled_an";
+				function = "wled_an";
+			};
+		};
 	};
 
 	usbphy: usbphy@10120000 {

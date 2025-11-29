@@ -28,13 +28,6 @@
 			function = LED_FUNCTION_WAN;
 			gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
 		};
-
-		led-2 {
-			color = <LED_COLOR_ID_BLUE>;
-			function = LED_FUNCTION_WLAN;
-			gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "phy0tpt";
-		};
 	};
 };
 
@@ -61,7 +54,7 @@
 
 &state_default {
 	gpio {
-		groups = "i2s", "refclk", "wdt", "wled_an";
+		groups = "i2s", "refclk", "wdt";
 		function = "gpio";
 	};
 };
@@ -76,4 +69,13 @@
 
 &usbphy {
 	status = "disabled";
+};
+
+&wmac {
+	pinctrl-names = "default";
+	pinctrl-0 = <&wled_pins>;
+	
+	led {
+		led-sources = <0>;
+	};
 };
