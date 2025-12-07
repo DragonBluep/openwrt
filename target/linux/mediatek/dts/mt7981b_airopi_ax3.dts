@@ -131,10 +131,10 @@
 &fan {
 	status = "okay";
 	fan-supply = <&reg_fan>;
-	interrupt-parent = <&pio>;
-	interrupts = <11 IRQ_TYPE_EDGE_RISING>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&fan_tach_pins>;
+	// interrupt-parent = <&pio>;
+	// interrupts = <11 IRQ_TYPE_EDGE_RISING>;
+	// pinctrl-names = "default";
+	// pinctrl-0 = <&fan_tach_pins>;
 	pwms = <&pwm 2 40000 0>;
 };
 
@@ -172,15 +172,18 @@
 				 <&topckgen CLK_TOP_CB_NET2_D2>;
 	bus-width = <4>;
 	cap-sd-highspeed;
+	cd-gpios = <&pio 11 GPIO_ACTIVE_LOW>;
 	disable-wp;
 	max-frequency = <50000000>;
 	no-1-8-v;
 	no-mmc;
 	no-sdio;
-	non-removable; /* workaround for hardware defect */
+	// non-removable; /* workaround for hardware defect */
 	pinctrl-names = "default", "state_uhs";
-	pinctrl-0 = <&mmc0_pins>;
-	pinctrl-1 = <&mmc0_pins>;
+	// pinctrl-0 = <&mmc0_pins>;
+	// pinctrl-1 = <&mmc0_pins>;
+	pinctrl-0 = <&fan_tach_pins>, <&mmc0_pins>;
+	pinctrl-1 = <&fan_tach_pins>, <&mmc0_pins>;
 	vmmc-supply = <&reg_vmmc>;
 	vqmmc-supply = <&reg_vqmmc>;
 };

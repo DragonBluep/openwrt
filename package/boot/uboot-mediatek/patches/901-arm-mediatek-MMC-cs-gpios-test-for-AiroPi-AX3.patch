@@ -1,0 +1,43 @@
+From 007187bfaeed1dffed0fa7e8e3b62aaac7e7ddfb Mon Sep 17 00:00:00 2001
+From: Shiji Yang <yangshiji66@outlook.com>
+Date: Mon, 8 Dec 2025 00:35:50 +0800
+Subject: [PATCH] arm: mediatek: MMC cs-gpios test for AiroPi AX3
+
+Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
+---
+ arch/arm/dts/mt7981_airopi_ax3.dts | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/arch/arm/dts/mt7981_airopi_ax3.dts
++++ b/arch/arm/dts/mt7981_airopi_ax3.dts
+@@ -164,16 +164,18 @@
+ 	status = "okay";
+ 	assigned-clock-parents = <&topckgen CLK_TOP_CB_NET2_D4>,
+ 				 <&topckgen CLK_TOP_CB_NET2_D2>;
+-	broken-cd;
++	// broken-cd;
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
++	cd-gpios = <&pio 11 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	max-frequency = <50000000>;
+ 	no-1-8-v;
+ 	no-mmc;
+ 	no-sdio;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc0_pins>;
++	// pinctrl-0 = <&mmc0_pins>;
++	pinctrl-0 = <&fan_tach_pins>, <&mmc0_pins>;
+ 	vmmc-supply = <&reg_vmmc>;
+ 	vqmmc-supply = <&reg_vqmmc>;
+ };
+@@ -336,7 +338,8 @@
+ &pwm {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&fan_tach_pins>, <&pwm2_pins>;
++	// pinctrl-0 = <&fan_tach_pins>, <&pwm2_pins>;
++	pinctrl-0 = <&pwm2_pins>;
+ };
+ 
+ &spi2 {
