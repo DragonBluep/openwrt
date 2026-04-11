@@ -333,23 +333,23 @@ define U-Boot/vgv7519_ram
 endef
 
 UBOOT_TARGETS:= \
-	arv4519pw_ram arv4519pw_nor arv4519pw_brn \
-	arv7506pw11_ram arv7506pw11_nor arv7506pw11_brn \
-	arv7510pw_ram arv7510pw_nor arv7510pw_brn \
-	arv7510pw22_ram arv7510pw22_nor arv7510pw22_brn \
-	arv7518pw_ram arv7518pw_nor arv7518pw_brn \
-	arv752dpw_ram arv752dpw_nor arv752dpw_brn \
-	arv752dpw22_ram arv752dpw22_nor arv752dpw22_brn \
-	arv8539pw22_brn arv8539pw22_nor arv8539pw22_ram \
-	bthomehubv5a_ram \
-	gigasx76x_ram gigasx76x_nor \
-	acmp252_ram acmp252_nor \
-	easy50712_ram easy50712_nor easy50712_norspl \
-	easy80920_ram easy80920_nor easy80920_norspl easy80920_sfspl \
-	fb3370_eva fb3370_ram fb3370_sfspl \
-	p2812hnufx_ram p2812hnufx_nandspl \
-	vgv7510kw22_brn vgv7510kw22_nor vgv7510kw22_ram \
-	vgv7519_brn vgv7519_nor vgv7519_ram
+# 	arv4519pw_ram arv4519pw_nor arv4519pw_brn \
+# 	arv7506pw11_ram arv7506pw11_nor arv7506pw11_brn \
+# 	arv7510pw_ram arv7510pw_nor arv7510pw_brn \
+# 	arv7510pw22_ram arv7510pw22_nor arv7510pw22_brn \
+# 	arv7518pw_ram arv7518pw_nor arv7518pw_brn \
+# 	arv752dpw_ram arv752dpw_nor arv752dpw_brn \
+# 	arv752dpw22_ram arv752dpw22_nor arv752dpw22_brn \
+# 	arv8539pw22_brn arv8539pw22_nor arv8539pw22_ram \
+# 	bthomehubv5a_ram \
+# 	gigasx76x_ram gigasx76x_nor \
+# 	acmp252_ram acmp252_nor \
+# 	easy50712_ram easy50712_nor easy50712_norspl \
+# 	easy80920_ram easy80920_nor easy80920_norspl easy80920_sfspl \
+# 	fb3370_eva fb3370_ram fb3370_sfspl \
+# 	p2812hnufx_ram p2812hnufx_nandspl \
+# 	vgv7510kw22_brn vgv7510kw22_nor vgv7510kw22_ram \
+# 	vgv7519_brn vgv7519_nor vgv7519_ram
 
 define CompressVR9Firmware
 	$(STAGING_DIR_HOST)/bin/lzma e \
