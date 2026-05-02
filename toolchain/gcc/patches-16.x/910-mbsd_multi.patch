@@ -3,7 +3,7 @@ Author: Felix Fietkau <nbd@openwrt.org>
 Date:   Tue Jul 31 00:52:27 2007 +0000
 
     Port the mbsd_multi patch from freewrt, which adds -fhonour-copts. This will emit warnings in packages that don't use our target cflags properly
-    
+
     SVN-Revision: 8256
 
 	This patch brings over a feature from MirBSD:
@@ -17,10 +17,10 @@ Date:   Tue Jul 31 00:52:27 2007 +0000
 
 --- a/gcc/c-family/c-opts.cc
 +++ b/gcc/c-family/c-opts.cc
-@@ -109,6 +109,9 @@ static size_t include_cursor;
+@@ -110,6 +110,9 @@ static size_t include_cursor;
  /* Whether any standard preincluded header has been preincluded.  */
  static bool done_preinclude;
- 
+
 +/* Check if a port honours COPTS.  */
 +static int honour_copts = 0;
 +
@@ -30,7 +30,7 @@ Date:   Tue Jul 31 00:52:27 2007 +0000
 @@ -503,6 +506,12 @@ c_common_handle_option (size_t scode, co
        flag_no_builtin = !value;
        break;
- 
+
 +    case OPT_fhonour_copts:
 +      if (c_language == clk_c) {
 +        honour_copts++;
@@ -40,10 +40,10 @@ Date:   Tue Jul 31 00:52:27 2007 +0000
      case OPT_fconstant_string_class_:
        constant_string_class_name = arg;
        break;
-@@ -1361,6 +1370,47 @@ c_common_init (void)
+@@ -1410,6 +1419,47 @@ c_common_init (void)
        return false;
      }
- 
+
 +  if (c_language == clk_c) {
 +    char *ev = getenv ("GCC_HONOUR_COPTS");
 +    int evv;
@@ -87,13 +87,13 @@ Date:   Tue Jul 31 00:52:27 2007 +0000
 +
    return true;
  }
- 
+
 --- a/gcc/c-family/c.opt
 +++ b/gcc/c-family/c.opt
-@@ -2008,6 +2008,9 @@ C++ ObjC++ Optimization Alias(fexception
+@@ -2080,6 +2080,9 @@ C++ ObjC++ Optimization Alias(fexception
  fhonor-std
  C++ ObjC++ WarnRemoved
- 
+
 +fhonour-copts
 +C ObjC C++ ObjC++ RejectNegative
 +
@@ -102,22 +102,22 @@ Date:   Tue Jul 31 00:52:27 2007 +0000
  Assume normal C execution environment.
 --- a/gcc/common.opt
 +++ b/gcc/common.opt
-@@ -1938,6 +1938,9 @@ Enum(hardcfr_check_noreturn_calls) Strin
+@@ -2004,6 +2004,9 @@ Enum(hardcfr_check_noreturn_calls) Strin
  EnumValue
  Enum(hardcfr_check_noreturn_calls) String(always) Value(HCFRNR_ALWAYS)
- 
+
 +fhonour-copts
 +Common RejectNegative
 +
- ; Nonzero means ignore `#ident' directives.  0 means handle them.
- ; Generate position-independent code for executables if possible
- ; On SVR4 targets, it also controls whether or not to emit a
+ ; Nonzero means do not emit .ident assembler directives and ignore
+ ; `#ident' preprocessor directives.
+ fident
 --- a/gcc/doc/invoke.texi
 +++ b/gcc/doc/invoke.texi
-@@ -10901,6 +10901,17 @@ This option is only supported for C and
- 
+@@ -11476,6 +11476,17 @@ This option is only supported for C and
+
  This warning is upgraded to an error by @option{-pedantic-errors}.
- 
+
 +@item -fhonour-copts
 +@opindex fhonour-copts
 +If @env{GCC_HONOUR_COPTS} is set to 1, abort if this option is not
@@ -134,10 +134,10 @@ Date:   Tue Jul 31 00:52:27 2007 +0000
  @item -Wstack-protector
 --- a/gcc/opts.cc
 +++ b/gcc/opts.cc
-@@ -2867,6 +2867,9 @@ common_handle_option (struct gcc_options
+@@ -2927,6 +2927,9 @@ common_handle_option (struct gcc_options
        add_comma_separated_to_vector (&opts->x_flag_ignored_attributes, arg);
        break;
- 
+
 +    case OPT_fhonour_copts:
 +      break;
 +
